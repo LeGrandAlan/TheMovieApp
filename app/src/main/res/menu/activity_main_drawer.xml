@@ -13,6 +13,10 @@
             android:id="@+id/nav_search"
             android:icon="@drawable/ic_menu_movie"
             android:title="@string/menu_recherche" />
+        <item
+            android:id="@+id/nav_top_rated"
+            android:icon="@drawable/ic_menu_top_rated"
+            android:title="@string/menu_top_rated" />
     </group>
 
     <item android:title="@string/menu_autre">

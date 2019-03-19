@@ -92,6 +92,8 @@ public class MainActivity extends AppCompatActivity
             fragment = new HomeFragment();
         } else if (id == R.id.nav_search) {
             fragment = new SearchFragment();
+        } else if (id == R.id.nav_top_rated) {
+            fragment = new TopRatedFragment();
         }
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);

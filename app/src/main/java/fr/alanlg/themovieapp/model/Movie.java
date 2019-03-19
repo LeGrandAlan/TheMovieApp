@@ -51,11 +51,11 @@ public class Movie {
         return voteAverage;
     }
 
-    public String getPosterLink(int widthInPixel) {
+    public String getPosterLink() {
         if (this.posterPath == null) {
             return null;
         }
-        return "https://image.tmdb.org/t/p/w" + widthInPixel + posterPath;
+        return "https://image.tmdb.org/t/p/original" + posterPath;
     }
 
     @Override
@@ -67,7 +67,7 @@ public class Movie {
                 ", releaseDate='" + releaseDate + '\'' +
                 ", voteCount=" + voteCount +
                 ", voteAverage=" + voteAverage +
-                ", posterPath='" + this.getPosterLink(500) + '\'' +
+                ", posterPath='" + this.getPosterLink() + '\'' +
                 '}';
     }
 

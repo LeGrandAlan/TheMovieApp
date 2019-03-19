@@ -10,4 +10,5 @@
     <string name="menu_autre">Autre</string>
     <string name="menu_partager">Partager</string>
     <string name="menu_accueil">Accueil</string>
+    <string name="menu_top_rated">Les mieux notés</string>
 </resources>
