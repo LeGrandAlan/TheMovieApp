@@ -7,14 +7,16 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/textViewTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="177dp"
         android:layout_marginTop="16dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginEnd="176dp"
+        android:layout_marginBottom="32dp"
         android:text="Films"
         android:textSize="24sp"
+        app:layout_constraintBottom_toTopOf="@+id/keyword"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -31,14 +33,14 @@
         android:inputType="textPersonName"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView2" />
+        app:layout_constraintTop_toBottomOf="@+id/textViewTitle" />
 
     <EditText
         android:id="@+id/releaseYear"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="25dp"
         android:layout_marginEnd="8dp"
         android:ems="10"
         android:hint="Date de sortie"
@@ -51,7 +53,7 @@
         android:id="@+id/genre"
         android:layout_width="0dp"
         android:layout_height="24dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="25dp"
         app:layout_constraintEnd_toEndOf="@+id/releaseYear"
         app:layout_constraintStart_toStartOf="@+id/releaseYear"
         app:layout_constraintTop_toBottomOf="@+id/releaseYear" />
@@ -61,8 +63,8 @@
         style="@style/Widget.AppCompat.SeekBar.Discrete"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:max="4"
+        android:layout_marginTop="25dp"
+        android:max="100"
         android:progress="0"
         app:layout_constraintEnd_toEndOf="@+id/genre"
         app:layout_constraintStart_toStartOf="@+id/genre"
@@ -73,10 +75,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="40dp"
         android:layout_marginEnd="8dp"
         android:text="Rechercher"
+        android:onClick="submit"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/resultNumber" />
 
