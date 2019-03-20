@@ -19,6 +19,7 @@ import com.koushikdutta.async.future.FutureCallback;
 import java.lang.reflect.Type;
 import java.util.LinkedList;
 
+import fr.alanlg.themovieapp.adapter.MovieImageAdapter;
 import fr.alanlg.themovieapp.model.Movie;
 
 public class TopRatedFragment extends Fragment {

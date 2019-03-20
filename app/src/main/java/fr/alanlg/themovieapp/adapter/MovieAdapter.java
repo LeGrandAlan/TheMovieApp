@@ -1,7 +1,9 @@
-package fr.alanlg.themovieapp;
+package fr.alanlg.themovieapp.adapter;
 
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +12,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+import fr.alanlg.themovieapp.R;
 import fr.alanlg.themovieapp.model.Movie;
 
 public class MovieAdapter extends RecyclerView.Adapter<MovieViewHolder> {
@@ -31,9 +34,12 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull MovieViewHolder itemViewHolder, int position) {
         Movie movie = movies.get(position);
-        Picasso.get().load(movie.getPosterLink()).into(itemViewHolder.image);
+        Picasso.get().load(movie.getPosterLink()).placeholder(R.drawable.image_loading).into(itemViewHolder.image);
         itemViewHolder.title.setText(movie.getTitle());
         itemViewHolder.description.setText(movie.getDescription());
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            itemViewHolder.description.setJustificationMode(Layout.JUSTIFICATION_MODE_INTER_WORD);
+        }
     }
 
     @Override

@@ -1,9 +1,11 @@
-package fr.alanlg.themovieapp;
+package fr.alanlg.themovieapp.adapter;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import fr.alanlg.themovieapp.R;
 
 public class MovieViewHolder extends RecyclerView.ViewHolder {
     public final ImageView image;

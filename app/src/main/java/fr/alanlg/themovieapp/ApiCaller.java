@@ -1,6 +1,7 @@
 package fr.alanlg.themovieapp;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.google.gson.JsonObject;
 import com.koushikdutta.ion.Ion;
@@ -27,7 +28,7 @@ public class ApiCaller {
 
         String url = BASE_URL + API_VERSION + "/search/movie";
 
-        return this.getBaseRequest("GET", url)
+        return this.getBaseRequest(url)
                 .setBodyParameter("query", query)
                 .setBodyParameter("include_adult", ADULT)
                 .setBodyParameter("page", String.valueOf(pageNumber))
@@ -40,7 +41,7 @@ public class ApiCaller {
 
         String url = BASE_URL + API_VERSION + "/movie/" + movieId;
 
-        return this.getBaseRequest("GET", url)
+        return this.getBaseRequest(url)
                 .asJsonObject();
 
     }
@@ -49,7 +50,7 @@ public class ApiCaller {
 
         String url = BASE_URL + API_VERSION + "/movie/top_rated";
 
-        return this.getBaseRequest("GET", url)
+        return this.getBaseRequest(url)
                 .setBodyParameter("page", String.valueOf(page))
                 .asJsonObject();
 
@@ -59,16 +60,16 @@ public class ApiCaller {
 
         String url = BASE_URL + API_VERSION + "/movie/now_playing";
 
-        return this.getBaseRequest("GET", url)
+        return this.getBaseRequest(url)
                 .setBodyParameter("page", String.valueOf(page))
                 .asJsonObject();
 
     }
 
-    private Builders.Any.U getBaseRequest(String method, String url) {
+    private Builders.Any.U getBaseRequest(String url) {
 
         return Ion.with(this.context)
-                .load(method, url)
+                .load(url)
                 .setBodyParameter("api_key", API_KEY)
                 .setBodyParameter("language", LANGUAGE);
 

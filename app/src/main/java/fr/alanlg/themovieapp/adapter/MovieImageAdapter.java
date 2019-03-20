@@ -1,4 +1,4 @@
-package fr.alanlg.themovieapp;
+package fr.alanlg.themovieapp.adapter;
 
 import android.content.Context;
 import android.util.Log;
@@ -13,6 +13,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.LinkedList;
 
+import fr.alanlg.themovieapp.R;
 import fr.alanlg.themovieapp.model.Movie;
 
 public class MovieImageAdapter extends BaseAdapter {

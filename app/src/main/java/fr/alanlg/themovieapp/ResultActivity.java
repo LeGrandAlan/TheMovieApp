@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.MenuItem;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -12,10 +13,9 @@ import com.google.gson.reflect.TypeToken;
 import com.koushikdutta.async.future.FutureCallback;
 
 import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.List;
 
+import fr.alanlg.themovieapp.adapter.MovieAdapter;
 import fr.alanlg.themovieapp.model.Movie;
 
 public class ResultActivity extends AppCompatActivity {
@@ -28,6 +28,10 @@ public class ResultActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_result);
+
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         Bundle bundle = getIntent().getExtras();
 
         String keyword = bundle.getString("keyword");
@@ -53,5 +57,15 @@ public class ResultActivity extends AppCompatActivity {
                         recyclerView.setAdapter(movieAdapter);
                     }
                 });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == android.R.id.home)
+            this.finish();
+
+        return super.onOptionsItemSelected(item);
     }
 }

@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 public class SearchFragment extends Fragment {
 
@@ -33,9 +34,19 @@ public class SearchFragment extends Fragment {
         search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                if (keyword.getText().toString().isEmpty()) {
+                    Toast.makeText(getActivity(), "Il faut des mots clés", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 Intent intent = new Intent(view.getContext(), ResultActivity.class);
-                intent.putExtra("keyword", keyword.getText());
-                intent.putExtra("releaseYear", releaseYear.getText());
+                intent.putExtra("keyword", keyword.getText().toString());
+                if (releaseYear.getText().toString().isEmpty()) {
+                    intent.putExtra("releaseYear", 0);
+                } else {
+                    intent.putExtra("releaseYear", Integer.parseInt(releaseYear.getText().toString()));
+                }
 //                intent.putExtra("genre", genre.getSelectedItem().toString());
                 intent.putExtra("genre", "null");
                 intent.putExtra("resultNumber", resultNumber.getProgress());
