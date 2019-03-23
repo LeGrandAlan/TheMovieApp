@@ -1,5 +1,6 @@
 package fr.alanlg.themovieapp.adapter;
 
+import android.content.Context;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -16,9 +17,11 @@ import fr.alanlg.themovieapp.R;
 import fr.alanlg.themovieapp.model.Movie;
 
 public class MovieAdapter extends RecyclerView.Adapter<MovieViewHolder> {
+    private Context context;
     private List<Movie> movies;
 
-    public MovieAdapter(List<Movie> movies) {
+    public MovieAdapter(Context context,List<Movie> movies) {
+        this.context = context;
         this.movies = movies;
     }
 
@@ -33,7 +36,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull MovieViewHolder itemViewHolder, int position) {
-        Movie movie = movies.get(position);
+        final Movie movie = movies.get(position);
         Picasso.get().load(movie.getPosterLink()).placeholder(R.drawable.image_loading).into(itemViewHolder.image);
         itemViewHolder.title.setText(movie.getTitle());
         itemViewHolder.description.setText(movie.getDescription());

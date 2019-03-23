@@ -1,5 +1,6 @@
 package fr.alanlg.themovieapp;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -16,6 +17,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import com.koushikdutta.async.future.FutureCallback;
 
+import java.io.Serializable;
 import java.lang.reflect.Type;
 import java.util.LinkedList;
 
@@ -53,7 +55,9 @@ public class TopRatedFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Movie clickedMovie = (Movie) parent.getItemAtPosition((int) id);
-                Log.d("Debug TRF : ", clickedMovie.toString());
+                Intent intent = new Intent(getContext(),MovieInfoActivity.class);
+                intent.putExtra("movie", clickedMovie);
+                startActivity(intent);
             }
         });
 
