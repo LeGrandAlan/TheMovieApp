@@ -14,15 +14,20 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 import fr.alanlg.themovieapp.R;
+import fr.alanlg.themovieapp.ResultActivity;
 import fr.alanlg.themovieapp.model.Movie;
 
 public class MovieAdapter extends RecyclerView.Adapter<MovieViewHolder> {
     private Context context;
     private List<Movie> movies;
 
-    public MovieAdapter(Context context,List<Movie> movies) {
+    public MovieAdapter(Context context, List<Movie> movies) {
         this.context = context;
         this.movies = movies;
+    }
+
+    public List<Movie> getList() {
+        return this.movies;
     }
 
     @NonNull
@@ -48,5 +53,11 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieViewHolder> {
     @Override
     public int getItemCount() {
         return movies.size();
+    }
+
+
+    public void addData(List<Movie> movies) {
+        this.movies.addAll(movies);
+        notifyDataSetChanged();
     }
 }

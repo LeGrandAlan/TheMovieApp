@@ -1,6 +1,10 @@
 package fr.alanlg.themovieapp.adapter;
 
 import android.content.Context;
+import android.os.Build;
+import android.support.annotation.NonNull;
+import android.support.v7.widget.RecyclerView;
+import android.text.Layout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,11 +16,12 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 
 import java.util.LinkedList;
+import java.util.List;
 
 import fr.alanlg.themovieapp.R;
 import fr.alanlg.themovieapp.model.Movie;
 
-public class MovieImageAdapter extends BaseAdapter {
+public class MovieImageAdapter extends RecyclerView.Adapter<MovieImageAdapter.ViewHolder> {
 
     private Context context;
     private LinkedList<Movie> movies;
@@ -26,45 +31,42 @@ public class MovieImageAdapter extends BaseAdapter {
         this.movies = movies;
     }
 
-    @Override
-    public int getCount() {
-        return movies.size();
-    }
-
-    @Override
-    public Object getItem(int position) {
+    public Movie getItem(int position) {
         return this.movies.get(position);
     }
 
+    @NonNull
     @Override
-    public long getItemId(int position) {
-        return position;
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+        View view = LayoutInflater.from(viewGroup.getContext())
+                .inflate(R.layout.movie_image_grid_item, viewGroup, false);
+
+        return new ViewHolder(view);
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public void onBindViewHolder(@NonNull ViewHolder viewHolder, int position) {
+        final Movie movie = movies.get(position);
+        Picasso.get().load(movie.getPosterLink()).placeholder(R.drawable.image_loading).into(viewHolder.getImageView());
 
-        View view = convertView;
-        ViewHolder holder;
-
-        if(view == null) {
-            LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            view = layoutInflater.inflate(R.layout.movie_image_grid_item, null, true);
-            holder = new ViewHolder(view);
-            view.setTag(holder);
-        } else {
-            holder = (ViewHolder) view.getTag();
-        }
-
-        Picasso.get().load(this.movies.get(position).getPosterLink()).placeholder(R.drawable.image_loading).into(holder.getImageView());
-
-        return view;
     }
 
-    class ViewHolder {
+    @Override
+    public int getItemCount() {
+        return movies.size();
+    }
+
+    public void addData(List<Movie> movies) {
+        this.movies.addAll(movies);
+        notifyDataSetChanged();
+    }
+
+
+    class ViewHolder extends RecyclerView.ViewHolder {
         private ImageView imageView;
 
         ViewHolder(View view) {
+            super(view);
             this.imageView = view.findViewById(R.id.movieImage);
         }
 
