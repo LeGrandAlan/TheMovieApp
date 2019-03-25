@@ -17,14 +17,29 @@
             android:id="@+id/nav_top_rated"
             android:icon="@drawable/ic_menu_top_rated"
             android:title="@string/menu_top_rated" />
+        <item
+            android:id="@+id/nav_favorite"
+            android:icon="@drawable/ic_menu_favorite"
+            android:title="@string/menu_favorite" />
     </group>
 
-    <item android:title="@string/menu_autre">
+    <item android:title="@string/menu_account">
         <menu>
             <item
-                android:id="@+id/nav_share"
-                android:icon="@drawable/ic_menu_share"
-                android:title="@string/menu_partager" />
+                android:id="@+id/nav_connection"
+                android:icon="@drawable/ic_menu_account"
+                android:title="@string/menu_connection"
+                android:visible="true"/>
+            <item
+                android:id="@+id/nav_parameters"
+                android:icon="@drawable/ic_menu_settings"
+                android:title="@string/menu_settings"
+                android:visible="false"/>
+            <item
+                android:id="@+id/nav_disconnection"
+                android:icon="@drawable/ic_menu_exit"
+                android:title="@string/menu_disconnection"
+                android:visible="false"/>
         </menu>
     </item>
 
