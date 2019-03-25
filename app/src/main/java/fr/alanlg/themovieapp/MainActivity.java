@@ -77,6 +77,7 @@ public class MainActivity extends AppCompatActivity
             navigationView.getMenu().findItem(R.id.nav_connection).setVisible(false);
             navigationView.getMenu().findItem(R.id.nav_parameters).setVisible(true);
             navigationView.getMenu().findItem(R.id.nav_disconnection).setVisible(true);
+            navigationView.getMenu().findItem(R.id.nav_favorite).setVisible(true);
 
             Snackbar.make(findViewById(R.id.drawer_layout), "Vous êtes connecté en tant que " + user.getDisplayName() + " !", Snackbar.LENGTH_LONG).show();
         } else {
@@ -88,6 +89,7 @@ public class MainActivity extends AppCompatActivity
             navigationView.getMenu().findItem(R.id.nav_connection).setVisible(true);
             navigationView.getMenu().findItem(R.id.nav_parameters).setVisible(false);
             navigationView.getMenu().findItem(R.id.nav_disconnection).setVisible(false);
+            navigationView.getMenu().findItem(R.id.nav_favorite).setVisible(false);
 
             Snackbar.make(findViewById(R.id.drawer_layout), "Vous êtes bien déconnecté !", Snackbar.LENGTH_LONG).show();
         }
