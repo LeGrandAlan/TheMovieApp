@@ -51,9 +51,9 @@ public class TopRatedFragment extends Fragment {
 
         apiCaller = new ApiCaller(getContext());
 
-         movieImageAdapter = new MovieImageAdapter(getContext(), new LinkedList<Movie>());
+        movieImageAdapter = new MovieImageAdapter(getContext(), new LinkedList<Movie>());
         topRatedRecyclerView.setAdapter(movieImageAdapter);
-        topRatedRecyclerView.setLayoutManager(new GridLayoutManager(getContext(),2));
+        topRatedRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
 
         topRatedRecyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
             GestureDetector mGestureDetector = new GestureDetector(getContext(), new GestureDetector.SimpleOnGestureListener() {
@@ -114,9 +114,12 @@ public class TopRatedFragment extends Fragment {
                     @Override
                     public void onCompleted(Exception e, JsonObject result) {
                         if (e == null) {
-                            Type movieListType = new TypeToken<LinkedList<Movie>>(){}.getType();
+                            Type movieListType = new TypeToken<LinkedList<Movie>>() {
+                            }.getType();
                             LinkedList<Movie> movies = new Gson().fromJson(result.get("results"), movieListType);
+                            int previousIndex = movieImageAdapter.getItemCount();
                             movieImageAdapter.addData(movies);
+                            movieImageAdapter.notifyItemRangeInserted(previousIndex, movieImageAdapter.getItemCount());
                             loading = false;
                         }
                     }

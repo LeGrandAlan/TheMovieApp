@@ -117,9 +117,12 @@ public class ResultActivity extends AppCompatActivity {
                     @Override
                     public void onCompleted(Exception e, JsonObject result) {
                         if (e == null) {
-                            Type movieListType = new TypeToken<LinkedList<Movie>>(){}.getType();
+                            Type movieListType = new TypeToken<LinkedList<Movie>>() {
+                            }.getType();
                             LinkedList<Movie> movies = new Gson().fromJson(result.get("results"), movieListType);
+                            int previousIndex = movieAdapter.getItemCount();
                             movieAdapter.addData(movies);
+                            movieAdapter.notifyItemRangeInserted(previousIndex, movieAdapter.getItemCount());
                             loading = false;
                         }
                     }

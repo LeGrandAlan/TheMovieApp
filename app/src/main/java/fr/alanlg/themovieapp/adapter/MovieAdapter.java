@@ -58,6 +58,5 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieViewHolder> {
 
     public void addData(List<Movie> movies) {
         this.movies.addAll(movies);
-        notifyDataSetChanged();
     }
 }
