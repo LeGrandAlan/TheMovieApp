@@ -47,8 +47,10 @@ public class MovieImageAdapter extends RecyclerView.Adapter<MovieImageAdapter.Vi
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int position) {
         final Movie movie = movies.get(position);
-        Picasso.get().load(movie.getPosterLink()).placeholder(R.drawable.image_loading).into(viewHolder.getImageView());
 
+        Picasso.get().load(movie.getPosterLink()).placeholder(R.drawable.image_loading).into(viewHolder.getMovieImage());
+        viewHolder.getMovieTitle().setText(movie.getTitle());
+        viewHolder.getMovieStarsNumber().setText(String.valueOf(movie.getVoteAverage()));
     }
 
     @Override
@@ -63,17 +65,28 @@ public class MovieImageAdapter extends RecyclerView.Adapter<MovieImageAdapter.Vi
 
 
     class ViewHolder extends RecyclerView.ViewHolder {
-        private ImageView imageView;
+        private ImageView movieImage;
+        private TextView movieTitle;
+        private TextView movieStarsNumber;
 
         ViewHolder(View view) {
             super(view);
-            this.imageView = view.findViewById(R.id.movieImage);
+            this.movieImage = view.findViewById(R.id.movieImage);
+            this.movieTitle = view.findViewById(R.id.movieTitle);
+            this.movieStarsNumber = view.findViewById(R.id.movieStarsNumber);
         }
 
-        ImageView getImageView() {
-            return this.imageView;
+        ImageView getMovieImage() {
+            return this.movieImage;
         }
 
+        TextView getMovieTitle() {
+            return movieTitle;
+        }
+
+        TextView getMovieStarsNumber() {
+            return movieStarsNumber;
+        }
     }
 
 }
