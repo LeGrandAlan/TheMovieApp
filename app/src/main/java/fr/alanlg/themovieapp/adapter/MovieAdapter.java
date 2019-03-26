@@ -42,7 +42,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull MovieViewHolder itemViewHolder, int position) {
         final Movie movie = movies.get(position);
-        Picasso.get().load(movie.getPosterLink()).placeholder(R.drawable.image_loading).into(itemViewHolder.image);
+        Picasso.get().load(movie.getPosterLink()).placeholder(R.drawable.image_loading).fit().into(itemViewHolder.image);
         itemViewHolder.title.setText(movie.getTitle());
         itemViewHolder.description.setText(movie.getDescription());
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -51,10 +51,21 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieViewHolder> {
     }
 
     @Override
+    public void onViewRecycled(@NonNull MovieViewHolder holder) {
+        super.onViewRecycled(holder);
+        Picasso.get().cancelRequest(holder.image);
+
+    }
+
+    @Override
     public int getItemCount() {
         return movies.size();
     }
 
+    @Override
+    public long getItemId(int position) {
+        return movies.get(position).hashCode();
+    }
 
     public void addData(List<Movie> movies) {
         this.movies.addAll(movies);

@@ -52,8 +52,15 @@ public class TopRatedFragment extends Fragment {
         apiCaller = new ApiCaller(getContext());
 
         movieImageAdapter = new MovieImageAdapter(getContext(), new LinkedList<Movie>());
+        movieImageAdapter.setHasStableIds(true);
+
         topRatedRecyclerView.setAdapter(movieImageAdapter);
         topRatedRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
+        topRatedRecyclerView.setHasFixedSize(true);
+        topRatedRecyclerView.setItemViewCacheSize(30);
+        topRatedRecyclerView.setDrawingCacheEnabled(true);
+        topRatedRecyclerView.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
+
 
         topRatedRecyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
             GestureDetector mGestureDetector = new GestureDetector(getContext(), new GestureDetector.SimpleOnGestureListener() {

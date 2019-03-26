@@ -3,6 +3,7 @@ package fr.alanlg.themovieapp.model;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 public class Movie implements Serializable {
 
@@ -58,6 +59,25 @@ public class Movie implements Serializable {
             return null;
         }
         return "https://image.tmdb.org/t/p/original" + posterPath;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Movie movie = (Movie) o;
+        return id == movie.id &&
+                voteCount == movie.voteCount &&
+                Float.compare(movie.voteAverage, voteAverage) == 0 &&
+                Objects.equals(title, movie.title) &&
+                Objects.equals(description, movie.description) &&
+                Objects.equals(releaseDate, movie.releaseDate) &&
+                Objects.equals(posterPath, movie.posterPath);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, title, description, releaseDate, voteCount, voteAverage, posterPath);
     }
 
     @Override
