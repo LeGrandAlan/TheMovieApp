@@ -7,7 +7,9 @@ import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.GestureDetector;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
@@ -44,6 +46,7 @@ public class ResultActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+
         Bundle bundle = getIntent().getExtras();
 
         keyword = bundle.getString("keyword");
@@ -54,7 +57,14 @@ public class ResultActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setItemViewCacheSize(30);
+        recyclerView.setDrawingCacheEnabled(true);
+        recyclerView.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
+
+
         movieAdapter = new MovieAdapter(getApplicationContext(), new LinkedList<Movie>());
+        movieAdapter.setHasStableIds(true);
         recyclerView.setAdapter(movieAdapter);
 
         apiCaller = new ApiCaller(getApplicationContext());
@@ -130,12 +140,25 @@ public class ResultActivity extends AppCompatActivity {
         ++nextPage;
     }
 
+    public void viewFilter(){
+
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
+        Log.d("tag", "onOptionsItemSelected: " + id);
         if (id == android.R.id.home)
             this.finish();
+        else if (id == R.id.action_filter)
+            viewFilter();
 
         return super.onOptionsItemSelected(item);
     }

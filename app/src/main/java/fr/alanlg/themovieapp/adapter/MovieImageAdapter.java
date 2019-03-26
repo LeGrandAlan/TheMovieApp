@@ -47,13 +47,25 @@ public class MovieImageAdapter extends RecyclerView.Adapter<MovieImageAdapter.Vi
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int position) {
         final Movie movie = movies.get(position);
-        Picasso.get().load(movie.getPosterLink()).placeholder(R.drawable.image_loading).into(viewHolder.getImageView());
+        Picasso.get().load(movie.getPosterLink()).placeholder(R.drawable.image_loading).fit().into(viewHolder.getImageView());
+
+    }
+
+    @Override
+    public void onViewRecycled(@NonNull ViewHolder holder) {
+        super.onViewRecycled(holder);
+        Picasso.get().cancelRequest(holder.getImageView());
 
     }
 
     @Override
     public int getItemCount() {
         return movies.size();
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return movies.get(position).hashCode();
     }
 
     public void addData(List<Movie> movies) {
