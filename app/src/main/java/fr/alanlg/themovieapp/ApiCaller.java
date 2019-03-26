@@ -28,7 +28,7 @@ public class ApiCaller {
 
         String url = BASE_URL + API_VERSION + "/search/movie";
 
-        return this.getBaseRequest(url)
+        return this.getBaseRequest(url, null)
                 .setBodyParameter("query", query)
                 .setBodyParameter("include_adult", ADULT)
                 .setBodyParameter("page", String.valueOf(pageNumber))
@@ -41,7 +41,7 @@ public class ApiCaller {
 
         String url = BASE_URL + API_VERSION + "/movie/" + movieId;
 
-        return this.getBaseRequest(url)
+        return this.getBaseRequest(url, "GET")
                 .asJsonObject();
 
     }
@@ -50,7 +50,7 @@ public class ApiCaller {
 
         String url = BASE_URL + API_VERSION + "/movie/top_rated";
 
-        return this.getBaseRequest(url)
+        return this.getBaseRequest(url, null)
                 .setBodyParameter("page", String.valueOf(page))
                 .asJsonObject();
 
@@ -60,19 +60,25 @@ public class ApiCaller {
 
         String url = BASE_URL + API_VERSION + "/movie/now_playing";
 
-        return this.getBaseRequest(url)
+        return this.getBaseRequest(url, null)
                 .setBodyParameter("page", String.valueOf(page))
                 .asJsonObject();
 
     }
 
-    private Builders.Any.U getBaseRequest(String url) {
+    private Builders.Any.U getBaseRequest(String url, String method) {
 
-        return Ion.with(this.context)
-                .load(url)
-                .setBodyParameter("api_key", API_KEY)
-                .setBodyParameter("language", LANGUAGE);
-
+        if (method == null) {
+            return Ion.with(this.context)
+                    .load(url)
+                    .setBodyParameter("api_key", API_KEY)
+                    .setBodyParameter("language", LANGUAGE);
+        } else {
+            return Ion.with(this.context)
+                    .load(method, url)
+                    .setBodyParameter("api_key", API_KEY)
+                    .setBodyParameter("language", LANGUAGE);
+        }
     }
 
 }

@@ -1,15 +1,11 @@
 package fr.alanlg.themovieapp.adapter;
 
 import android.content.Context;
-import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.text.Layout;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -69,11 +65,17 @@ public class MovieImageAdapter extends RecyclerView.Adapter<MovieImageAdapter.Vi
         return movies.get(position).hashCode();
     }
 
-    public void addData(List<Movie> movies) {
-        this.movies.addAll(movies);
-
+    public void addData(Movie movie) {
+        this.movies.add(movie);
     }
 
+    public void addData(List<Movie> movies) {
+        this.movies.addAll(movies);
+    }
+
+    public void deleteData() {
+        this.movies.clear();
+    }
 
     class ViewHolder extends RecyclerView.ViewHolder {
         private ImageView movieImage;

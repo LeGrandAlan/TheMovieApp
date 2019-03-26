@@ -1,4 +1,4 @@
-package fr.alanlg.themovieapp;
+package fr.alanlg.themovieapp.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,6 +13,9 @@ import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.Toast;
+
+import fr.alanlg.themovieapp.R;
+import fr.alanlg.themovieapp.ResultActivity;
 
 public class SearchFragment extends Fragment {
 
