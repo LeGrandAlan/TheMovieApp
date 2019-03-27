@@ -75,6 +75,15 @@ public class ApiCaller {
                 .asJsonObject();
     }
 
+    public ResponseFuture<JsonObject> movieCredits(int movieId) {
+        String url = BASE_URL + API_VERSION + "/movie/" + movieId + "/credits";
+
+        return Ion.with(this.context)
+                .load("GET", url)
+                .setBodyParameter("api_key", API_KEY)
+                .asJsonObject();
+    }
+
     public ResponseFuture<JsonObject> movieVideos(int movieId) {
         String url = BASE_URL + API_VERSION + "/movie/" + movieId + "/videos";
 
