@@ -4,65 +4,80 @@ import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import android.widget.Toolbar;
 import android.util.Log;
-import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.youtube.player.YouTubeBaseActivity;
+import com.google.android.youtube.player.YouTubeInitializationResult;
+import com.google.android.youtube.player.YouTubePlayer;
+import com.google.android.youtube.player.YouTubePlayerView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
+import com.koushikdutta.async.future.FutureCallback;
 import com.squareup.picasso.Picasso;
 
+import java.lang.reflect.Type;
 import java.util.LinkedList;
 
 import fr.alanlg.themovieapp.listener.FabFavoriteClickListener;
 import fr.alanlg.themovieapp.listener.FabNoFavoriteClickListener;
 import fr.alanlg.themovieapp.model.Movie;
+import fr.alanlg.themovieapp.model.MovieVideo;
 
-public class MovieInfoActivity extends AppCompatActivity {
+public class MovieInfoActivity extends YouTubeBaseActivity {
 
     ImageView imageView;
     TextView title;
     TextView date;
     TextView description;
+    YouTubePlayerView youTubePlayerView;
+    YouTubePlayer.OnInitializedListener onInitializedListener;
 
-    @SuppressLint("RestrictedApi")
+    @SuppressLint({"RestrictedApi", "ClickableViewAccessibility"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_info);
 
-        // ajout retour en arrière
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setDisplayShowHomeEnabled(true);
-        }
-
         imageView = findViewById(R.id.imageViewMoviePoster);
         title = findViewById(R.id.textViewTitleInfo);
         date = findViewById(R.id.textViewDateInfo);
         description = findViewById(R.id.textViewDescriptionInfo);
+        youTubePlayerView = findViewById(R.id.youtubePlayer);
 
         Bundle bundle = getIntent().getExtras();
 
         final Movie movie = (Movie) bundle.getSerializable("movie");
 
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar.setTitle("Détails sur " + movie.getTitle());
+        toolbar.setNavigationIcon(R.drawable.ic_arrow_back);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+        setActionBar(toolbar);
+
         Picasso.get().load(movie.getPosterLink()).placeholder(R.drawable.image_loading).into(imageView);
         title.setText(movie.getTitle());
         date.setText(movie.getReleaseDate());
         description.setText(movie.getDescription());
-
-
 
         final FloatingActionButton fabFav = findViewById(R.id.fabFavMovie);
         final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -102,9 +117,54 @@ public class MovieInfoActivity extends AppCompatActivity {
                 }
             });
         }
+
+        onInitializedListener = new YouTubePlayer.OnInitializedListener() {
+            @Override
+            public void onInitializationSuccess(YouTubePlayer.Provider provider, final YouTubePlayer youTubePlayer, boolean b) {
+
+                youTubePlayer.setShowFullscreenButton(false);
+
+                ApiCaller apiCaller = new ApiCaller(getApplicationContext());
+                apiCaller.movieVideos(movie.getId()).setCallback(new FutureCallback<JsonObject>() {
+                    @Override
+                    public void onCompleted(Exception e, JsonObject result) {
+                        Type movieVideoListType = new TypeToken<LinkedList<MovieVideo>>() {}.getType();
+                        LinkedList<MovieVideo> movieVideos = new Gson().fromJson(result.get("results"), movieVideoListType);
+
+                        LinkedList<String> youtubeKeys = new LinkedList<>();
+
+                        for (MovieVideo movieVideo : movieVideos) {
+                            if (movieVideo.getSite().equals("YouTube")) {
+                                youtubeKeys.add(movieVideo.getKey());
+                            }
+                        }
+
+                        youTubePlayer.loadVideos(youtubeKeys);
+
+                    }
+                });
+            }
+
+            @Override
+            public void onInitializationFailure(YouTubePlayer.Provider provider, YouTubeInitializationResult youTubeInitializationResult) {
+                Log.d("DEBUG", "Youtube failed to init");
+
+            }
+        };
+
+        youTubePlayerView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                youTubePlayerView.initialize(YoutubeConfig.getApiKey(), onInitializedListener);
+                return false;
+            }
+        });
+
     }
 
-    @Override
+
+
+    /*@Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
         if (item.getItemId() == android.R.id.home) {
@@ -112,6 +172,6 @@ public class MovieInfoActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
-    }
+    }*/
 
 }

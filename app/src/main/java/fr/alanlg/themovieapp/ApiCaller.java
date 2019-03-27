@@ -66,6 +66,22 @@ public class ApiCaller {
 
     }
 
+    public ResponseFuture<JsonObject> movieImages(int movieId) {
+        String url = BASE_URL + API_VERSION + "/movie/" + movieId + "/images";
+
+        return Ion.with(this.context)
+                .load("GET", url)
+                .setBodyParameter("api_key", API_KEY)
+                .asJsonObject();
+    }
+
+    public ResponseFuture<JsonObject> movieVideos(int movieId) {
+        String url = BASE_URL + API_VERSION + "/movie/" + movieId + "/videos";
+
+        return this.getBaseRequest(url, "GET")
+                .asJsonObject();
+    }
+
     private Builders.Any.U getBaseRequest(String url, String method) {
 
         if (method == null) {
