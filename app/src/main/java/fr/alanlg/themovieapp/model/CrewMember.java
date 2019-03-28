@@ -4,7 +4,9 @@ import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 
-public class CrewMember implements Serializable {
+import fr.alanlg.themovieapp.adapter.Member;
+
+public class CrewMember extends Member implements Serializable  {
 
     @SerializedName("credit_id")
     private String id;

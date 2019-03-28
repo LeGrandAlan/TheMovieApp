@@ -1,9 +1,12 @@
 package fr.alanlg.themovieapp;
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.view.ViewPager;
+import android.view.MenuItem;
 import android.widget.Toolbar;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -31,20 +34,30 @@ import com.squareup.picasso.Picasso;
 
 import java.lang.reflect.Type;
 import java.util.LinkedList;
+import java.util.Random;
 
+import fr.alanlg.themovieapp.adapter.CardGalleryAdapter;
+import fr.alanlg.themovieapp.adapter.Member;
 import fr.alanlg.themovieapp.listener.FabFavoriteClickListener;
 import fr.alanlg.themovieapp.listener.FabNoFavoriteClickListener;
+import fr.alanlg.themovieapp.model.CastMember;
+import fr.alanlg.themovieapp.model.CrewMember;
 import fr.alanlg.themovieapp.model.Movie;
+import fr.alanlg.themovieapp.model.MovieImage;
 import fr.alanlg.themovieapp.model.MovieVideo;
 
 public class MovieInfoActivity extends YouTubeBaseActivity {
 
     ImageView imageView;
+    ImageView movieImage;
     TextView title;
     TextView date;
     TextView description;
     YouTubePlayerView youTubePlayerView;
     YouTubePlayer.OnInitializedListener onInitializedListener;
+    Dialog dialog;
+    ViewPager actorsViewPager;
+    ViewPager crewViewPager;
 
     @SuppressLint({"RestrictedApi", "ClickableViewAccessibility"})
     @Override
@@ -58,9 +71,13 @@ public class MovieInfoActivity extends YouTubeBaseActivity {
         date = findViewById(R.id.textViewDateInfo);
         description = findViewById(R.id.textViewDescriptionInfo);
         youTubePlayerView = findViewById(R.id.youtubePlayer);
+        movieImage = findViewById(R.id.movieImage);
+        actorsViewPager = findViewById(R.id.actorsViewPager);
+        crewViewPager = findViewById(R.id.crewViewPager);
 
         Bundle bundle = getIntent().getExtras();
 
+        final ApiCaller apiCaller = new ApiCaller(getApplicationContext());
         final Movie movie = (Movie) bundle.getSerializable("movie");
 
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -118,13 +135,48 @@ public class MovieInfoActivity extends YouTubeBaseActivity {
             });
         }
 
+        //Affichage d'une image du film aléatoirement
+        apiCaller.movieImages(movie.getId()).setCallback(new FutureCallback<JsonObject>() {
+            @Override
+            public void onCompleted(Exception e, JsonObject result) {
+                Type movieImageListType = new TypeToken<LinkedList<MovieImage>>() {}.getType();
+                LinkedList<MovieImage> movieImages = new Gson().fromJson(result.get("backdrops"), movieImageListType);
+
+                Random r = new Random();
+                int randomIndex = r.nextInt(movieImages.size() - 1);
+
+                Picasso.get().load(movieImages.get(randomIndex).getImagePath()).noFade().placeholder(R.drawable.image_loading).into(movieImage);
+            }
+        });
+
+        //Affichage des acteurs et des membres de la prod
+        apiCaller.movieCredits(movie.getId()).setCallback(new FutureCallback<JsonObject>() {
+            @Override
+            public void onCompleted(Exception e, JsonObject result) {
+                Type castMemberListType = new TypeToken<LinkedList<CastMember>>() {}.getType();
+                LinkedList<Member> castMembers = new Gson().fromJson(result.get("cast"), castMemberListType);
+
+                final CardGalleryAdapter cardGalleryAdapter = new CardGalleryAdapter(castMembers, getApplicationContext());
+                actorsViewPager.setAdapter(cardGalleryAdapter);
+                actorsViewPager.setPadding(100, 0, 100, 0);
+
+                Type crewMemberListType = new TypeToken<LinkedList<CrewMember>>() {}.getType();
+                LinkedList<Member> crewMembers = new Gson().fromJson(result.get("crew"), crewMemberListType);
+
+                final CardGalleryAdapter cardGalleryAdapter2 = new CardGalleryAdapter(crewMembers, getApplicationContext());
+                crewViewPager.setAdapter(cardGalleryAdapter2);
+                crewViewPager.setPadding(100, 0, 100, 0);
+
+            }
+        });
+
+        //Affichage de la bande annonce
         onInitializedListener = new YouTubePlayer.OnInitializedListener() {
             @Override
             public void onInitializationSuccess(YouTubePlayer.Provider provider, final YouTubePlayer youTubePlayer, boolean b) {
 
                 youTubePlayer.setShowFullscreenButton(false);
 
-                ApiCaller apiCaller = new ApiCaller(getApplicationContext());
                 apiCaller.movieVideos(movie.getId()).setCallback(new FutureCallback<JsonObject>() {
                     @Override
                     public void onCompleted(Exception e, JsonObject result) {
@@ -134,13 +186,10 @@ public class MovieInfoActivity extends YouTubeBaseActivity {
                         LinkedList<String> youtubeKeys = new LinkedList<>();
 
                         for (MovieVideo movieVideo : movieVideos) {
-                            if (movieVideo.getSite().equals("YouTube")) {
+                            if (movieVideo.getSite().equals("YouTube"))
                                 youtubeKeys.add(movieVideo.getKey());
-                            }
                         }
-
                         youTubePlayer.loadVideos(youtubeKeys);
-
                     }
                 });
             }
@@ -148,7 +197,6 @@ public class MovieInfoActivity extends YouTubeBaseActivity {
             @Override
             public void onInitializationFailure(YouTubePlayer.Provider provider, YouTubeInitializationResult youTubeInitializationResult) {
                 Log.d("DEBUG", "Youtube failed to init");
-
             }
         };
 
@@ -162,9 +210,7 @@ public class MovieInfoActivity extends YouTubeBaseActivity {
 
     }
 
-
-
-    /*@Override
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
         if (item.getItemId() == android.R.id.home) {
@@ -172,6 +218,6 @@ public class MovieInfoActivity extends YouTubeBaseActivity {
         }
 
         return super.onOptionsItemSelected(item);
-    }*/
+    }
 
 }
