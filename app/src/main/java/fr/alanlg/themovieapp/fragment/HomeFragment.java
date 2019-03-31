@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,8 +20,12 @@ import java.util.LinkedList;
 
 import fr.alanlg.themovieapp.ApiCaller;
 import fr.alanlg.themovieapp.R;
+import fr.alanlg.themovieapp.adapter.Member;
+import fr.alanlg.themovieapp.adapter.MemberCardGalleryAdapter;
+import fr.alanlg.themovieapp.adapter.MovieCardGalleryAdapter;
 import fr.alanlg.themovieapp.model.CastMember;
 import fr.alanlg.themovieapp.model.CrewMember;
+import fr.alanlg.themovieapp.model.Movie;
 import fr.alanlg.themovieapp.model.MovieVideo;
 
 public class HomeFragment extends Fragment {
@@ -28,26 +33,26 @@ public class HomeFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_home, container, false);
+    }
 
-        int movieId = 32617;
+    @Override
+    public void onViewCreated(@NonNull final View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
         ApiCaller apiCaller = new ApiCaller(getContext());
-        apiCaller.movieCredits(movieId).setCallback(new FutureCallback<JsonObject>() {
+        apiCaller.nowPlaying(1).setCallback(new FutureCallback<JsonObject>() {
             @Override
             public void onCompleted(Exception e, JsonObject result) {
+                Type movieListType = new TypeToken<LinkedList<Movie>>() {}.getType();
+                LinkedList<Movie> movies = new Gson().fromJson(result.get("results"), movieListType);
 
-                Type crewMemberListType = new TypeToken<LinkedList<CrewMember>>() {}.getType();
-                LinkedList<CrewMember> crewMembers = new Gson().fromJson(result.get("crew"), crewMemberListType);
+                ViewPager nowPlayingViewPager = view.findViewById(R.id.nowPlayingViewPager);
 
-                CrewMember director = null;
-                for (CrewMember crewMember : crewMembers) {
-                    if (crewMember.getJob().equals("Director")){
-                        director = crewMember;
-                    }
-                }
-
+                final MovieCardGalleryAdapter memberCardGalleryAdapter = new MovieCardGalleryAdapter(movies, getContext());
+                nowPlayingViewPager.setAdapter(memberCardGalleryAdapter);
             }
         });
 
-        return inflater.inflate(R.layout.fragment_home, container, false);
     }
 }

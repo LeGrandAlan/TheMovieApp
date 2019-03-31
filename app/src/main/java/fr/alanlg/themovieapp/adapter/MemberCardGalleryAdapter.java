@@ -17,13 +17,13 @@ import fr.alanlg.themovieapp.R;
 import fr.alanlg.themovieapp.model.CastMember;
 import fr.alanlg.themovieapp.model.CrewMember;
 
-public class CardGalleryAdapter extends PagerAdapter {
+public class MemberCardGalleryAdapter extends PagerAdapter {
 
     private List<Member> members;
     private LayoutInflater layoutInflater;
     private Context context;
 
-    public CardGalleryAdapter(List<Member> castMembers, Context context) {
+    public MemberCardGalleryAdapter(List<Member> castMembers, Context context) {
         this.members = castMembers;
         this.context = context;
     }

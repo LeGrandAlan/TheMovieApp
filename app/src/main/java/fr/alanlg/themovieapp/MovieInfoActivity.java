@@ -36,7 +36,7 @@ import java.lang.reflect.Type;
 import java.util.LinkedList;
 import java.util.Random;
 
-import fr.alanlg.themovieapp.adapter.CardGalleryAdapter;
+import fr.alanlg.themovieapp.adapter.MemberCardGalleryAdapter;
 import fr.alanlg.themovieapp.adapter.Member;
 import fr.alanlg.themovieapp.listener.FabFavoriteClickListener;
 import fr.alanlg.themovieapp.listener.FabNoFavoriteClickListener;
@@ -156,15 +156,15 @@ public class MovieInfoActivity extends YouTubeBaseActivity {
                 Type castMemberListType = new TypeToken<LinkedList<CastMember>>() {}.getType();
                 LinkedList<Member> castMembers = new Gson().fromJson(result.get("cast"), castMemberListType);
 
-                final CardGalleryAdapter cardGalleryAdapter = new CardGalleryAdapter(castMembers, getApplicationContext());
-                actorsViewPager.setAdapter(cardGalleryAdapter);
+                final MemberCardGalleryAdapter memberCardGalleryAdapter = new MemberCardGalleryAdapter(castMembers, getApplicationContext());
+                actorsViewPager.setAdapter(memberCardGalleryAdapter);
                 actorsViewPager.setPadding(100, 0, 100, 0);
 
                 Type crewMemberListType = new TypeToken<LinkedList<CrewMember>>() {}.getType();
                 LinkedList<Member> crewMembers = new Gson().fromJson(result.get("crew"), crewMemberListType);
 
-                final CardGalleryAdapter cardGalleryAdapter2 = new CardGalleryAdapter(crewMembers, getApplicationContext());
-                crewViewPager.setAdapter(cardGalleryAdapter2);
+                final MemberCardGalleryAdapter memberCardGalleryAdapter2 = new MemberCardGalleryAdapter(crewMembers, getApplicationContext());
+                crewViewPager.setAdapter(memberCardGalleryAdapter2);
                 crewViewPager.setPadding(100, 0, 100, 0);
 
             }
