@@ -56,6 +56,16 @@ public class ApiCaller {
 
     }
 
+    public ResponseFuture<JsonObject> popular(int page) {
+
+        String url = BASE_URL + API_VERSION + "/movie/popular";
+
+        return this.getBaseRequest(url, null)
+                .setBodyParameter("page", String.valueOf(page))
+                .asJsonObject();
+
+    }
+
     public ResponseFuture<JsonObject> nowPlaying(int page) {
 
         String url = BASE_URL + API_VERSION + "/movie/now_playing";

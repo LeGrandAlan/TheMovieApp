@@ -30,6 +30,7 @@ import java.util.Objects;
 
 import fr.alanlg.themovieapp.fragment.FavoriteFragment;
 import fr.alanlg.themovieapp.fragment.HomeFragment;
+import fr.alanlg.themovieapp.fragment.PopularFragment;
 import fr.alanlg.themovieapp.fragment.SearchFragment;
 import fr.alanlg.themovieapp.fragment.TopRatedFragment;
 
@@ -37,12 +38,13 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private static final int RC_SIGN_IN = 1;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -144,12 +146,19 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.nav_home) {
             fragment = new HomeFragment();
+            toolbar.setTitle(R.string.app_name);
         } else if (id == R.id.nav_search) {
             fragment = new SearchFragment();
+            toolbar.setTitle("Recherche de films");
         } else if (id == R.id.nav_top_rated) {
             fragment = new TopRatedFragment();
+            toolbar.setTitle("Films les mieux notés");
+        } else if (id == R.id.nav_popular) {
+            fragment = new PopularFragment();
+            toolbar.setTitle("Films populaires");
         } else if (id == R.id.nav_favorite) {
             fragment = new FavoriteFragment();
+            toolbar.setTitle("Vos favoris");
         } else if (id == R.id.nav_connection) {
             List<AuthUI.IdpConfig> providers = Arrays.asList(
                     new AuthUI.IdpConfig.EmailBuilder().build(),
