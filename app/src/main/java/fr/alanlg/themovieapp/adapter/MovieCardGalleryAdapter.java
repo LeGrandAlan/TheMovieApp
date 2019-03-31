@@ -14,8 +14,6 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 import fr.alanlg.themovieapp.R;
-import fr.alanlg.themovieapp.model.CastMember;
-import fr.alanlg.themovieapp.model.CrewMember;
 import fr.alanlg.themovieapp.model.Movie;
 
 public class MovieCardGalleryAdapter extends PagerAdapter {
@@ -48,12 +46,14 @@ public class MovieCardGalleryAdapter extends PagerAdapter {
         ImageView cardGalleryImage = view.findViewById(R.id.cardGalleryImage);
         TextView cardGalleryText = view.findViewById(R.id.cardGalleryText);
         TextView cardGalleryText2 = view.findViewById(R.id.cardGalleryText2);
+        TextView cardGalleryText3 = view.findViewById(R.id.cardGalleryText3);
 
         Movie movie = movies.get(position);
 
         Picasso.get().load(movie.getPosterLink()).noFade().placeholder(R.drawable.image_loading).into(cardGalleryImage);
-        cardGalleryText.setText("Titre : " + movie.getTitle());
-        cardGalleryText2.setText("Date de sortie : " + movie.getReleaseDate());
+        cardGalleryText.setText(movie.getTitle());
+        cardGalleryText2.setText("Sorti le " + movie.getReleaseDate());
+        cardGalleryText3.setText(movie.getDescription());
 
 
         container.addView(view, 0);
@@ -64,6 +64,10 @@ public class MovieCardGalleryAdapter extends PagerAdapter {
     @Override
     public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
         container.removeView((View)object);
+    }
+
+    public Movie getItemAtPosition(int i) {
+        return this.movies.get(i);
     }
 
     /*@Override
