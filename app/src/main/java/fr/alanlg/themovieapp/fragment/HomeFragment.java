@@ -1,6 +1,7 @@
 package fr.alanlg.themovieapp.fragment;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -17,6 +18,8 @@ import com.koushikdutta.async.future.FutureCallback;
 
 import java.lang.reflect.Type;
 import java.util.LinkedList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import fr.alanlg.themovieapp.ApiCaller;
 import fr.alanlg.themovieapp.R;
@@ -29,6 +32,12 @@ import fr.alanlg.themovieapp.model.Movie;
 import fr.alanlg.themovieapp.model.MovieVideo;
 
 public class HomeFragment extends Fragment {
+
+    Timer timer = new Timer();
+    private Handler mHandler = new Handler();
+    private int currentPage = -1;
+
+    ViewPager nowPlayingViewPager;
 
     @Nullable
     @Override
@@ -47,12 +56,51 @@ public class HomeFragment extends Fragment {
                 Type movieListType = new TypeToken<LinkedList<Movie>>() {}.getType();
                 LinkedList<Movie> movies = new Gson().fromJson(result.get("results"), movieListType);
 
-                ViewPager nowPlayingViewPager = view.findViewById(R.id.nowPlayingViewPager);
+                nowPlayingViewPager = view.findViewById(R.id.nowPlayingViewPager);
 
                 final MovieCardGalleryAdapter memberCardGalleryAdapter = new MovieCardGalleryAdapter(movies, getContext());
                 nowPlayingViewPager.setAdapter(memberCardGalleryAdapter);
+
+                nowPlayingViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+                    @Override
+                    public void onPageScrolled(int i, float v, int i1) {
+                    }
+
+                    @Override
+                    public void onPageSelected(int i) {
+                        //nouvelle page
+                        currentPage = i;
+                    }
+
+                    @Override
+                    public void onPageScrollStateChanged(int i) {
+                    }
+                });
+
+                timer = new Timer();
+                timer.scheduleAtFixedRate(new TimerTask() {
+                    @Override
+                    public void run() {
+                        mHandler.post(new Runnable() {
+                            public void run() {
+                                ++currentPage;
+                                if (currentPage == nowPlayingViewPager.getAdapter().getCount()) {
+                                    currentPage = 0;
+                                }
+                                nowPlayingViewPager.setCurrentItem(currentPage, true);
+                            }
+                        });
+                    }
+                }, 0, 6000);
+
             }
         });
 
+    }
+
+    @Override
+    public void onDetach() {
+        timer.cancel();
+        super.onDetach();
     }
 }
