@@ -16,6 +16,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -60,7 +61,7 @@ public class ResultActivity extends AppCompatActivity {
         Bundle bundle = getIntent().getExtras();
 
         keyword = bundle.getString("keyword");
-        studio = bundle.getString("Studio");
+        studio = bundle.getString("studio");
         releaseYear = bundle.getInt("releaseYear");
         genre = bundle.getString("genre");
         resultNumberMax = bundle.getInt("resultNumberMax") == 0 ? 100000 : bundle.getInt("resultNumberMax");
@@ -133,7 +134,8 @@ public class ResultActivity extends AppCompatActivity {
 
 
     public void recyclerViewAddData() {
-        apiCaller.searchMovie(keyword, nextPage, releaseYear)
+        Log.d("sdfghjk", "recyclerViewAddData: " + keyword + ", " + nextPage + ", " + releaseYear + ", " + studio + ", " + genre);
+        apiCaller.searchMovie(keyword, nextPage, releaseYear, studio, genre)
                 .setCallback(new FutureCallback<JsonObject>() {
                     @Override
                     public void onCompleted(Exception e, JsonObject result) {
@@ -141,13 +143,15 @@ public class ResultActivity extends AppCompatActivity {
                             Type movieListType = new TypeToken<LinkedList<Movie>>() {
                             }.getType();
                             LinkedList<Movie> movies = new Gson().fromJson(result.get("results"), movieListType);
-
+                            if (result.get("total_results").getAsInt() == 0) {
+                                Toast.makeText(ResultActivity.this, "Il n'y a pas de resultats", Toast.LENGTH_SHORT).show();
+                                return;
+                            }
                             if (currentResultNumber + movies.size() > resultNumberMax) {
                                 movies.subList(resultNumberMax - currentResultNumber, movies.size()).clear();
                                 currentResultNumber = resultNumberMax;
                             } else
                                 currentResultNumber += movies.size();
-                            Log.d("sdfgh", "onCompleted: " + movies.size());
                             int previousIndex = movieAdapter.getItemCount();
                             movieAdapter.addData(movies);
                             movieAdapter.notifyItemRangeInserted(previousIndex, movieAdapter.getItemCount());

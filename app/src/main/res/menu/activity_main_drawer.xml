@@ -41,6 +41,11 @@
                 android:title="@string/menu_settings"
                 android:visible="false"/>
             <item
+                android:id="@+id/nav_credit"
+                android:icon="@android:drawable/ic_dialog_info"
+                android:title="@string/menu_credit"
+                android:visible="true" />
+            <item
                 android:id="@+id/nav_disconnection"
                 android:icon="@drawable/ic_menu_exit"
                 android:title="@string/menu_disconnection"

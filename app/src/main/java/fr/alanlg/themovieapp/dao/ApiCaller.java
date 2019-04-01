@@ -12,7 +12,7 @@ public class ApiCaller {
 
     private final String API_KEY = "0162ba21af88b681e0a203ead28348ec";
     private final String LANGUAGE = "fr-FR";
-    private final String ADULT = "false";
+    private final String ADULT = "true";
     private final String BASE_URL = "https://api.themoviedb.org/";
     private final String API_VERSION = "3";
 
@@ -22,24 +22,46 @@ public class ApiCaller {
         this.context = context;
     }
 
-    public ResponseFuture<JsonObject> searchMovie(String query, int pageNumber, int year) {
+    public ResponseFuture<JsonObject> searchMovie(String keyword, int pageNumber, int year, String compagnie, String genre) {
 
         String yearString = (year == 0) ? "" : String.valueOf(year);
 
-        String url = BASE_URL + API_VERSION + "/search/movie";
+        String url = BASE_URL + API_VERSION + "/discover/movie";
 
         return this.getBaseRequest(url, null)
-                .setBodyParameter("query", query)
+                .setBodyParameter("api_key", API_KEY)
+                .setBodyParameter("language", LANGUAGE)
                 .setBodyParameter("include_adult", ADULT)
                 .setBodyParameter("page", String.valueOf(pageNumber))
                 .setBodyParameter("year", yearString)
+                .setBodyParameter("with_companies", compagnie)
+                .setBodyParameter("with_genres", genre)
                 .asJsonObject();
-
     }
+
+    public ResponseFuture<JsonObject> searchCompagnie(String keyword) {
+
+        String url = BASE_URL + API_VERSION + "/search/company";
+
+        return this.getBaseRequest(url, "GET")
+                .setBodyParameter("api_key", API_KEY)
+                .setBodyParameter("query", keyword)
+                .asJsonObject();
+    }
+
 
     public ResponseFuture<JsonObject> movieDetails(int movieId) {
 
         String url = BASE_URL + API_VERSION + "/movie/" + movieId;
+
+        return this.getBaseRequest(url, "GET")
+                .asJsonObject();
+
+    }
+
+    public ResponseFuture<JsonObject> similarMovie(int movieId) {
+
+        String url = BASE_URL + API_VERSION + "/movie/" + movieId + "/similar";
 
         return this.getBaseRequest(url, "GET")
                 .asJsonObject();
@@ -111,11 +133,20 @@ public class ApiCaller {
                 .asJsonObject();
     }
 
+    public ResponseFuture<JsonObject> genreList() {
+        String url = BASE_URL + API_VERSION + "/genre/movie/list";
+
+        return this.getBaseRequest(url, "GET")
+                .asJsonObject();
+    }
+
+
     private Builders.Any.U getBaseRequest(String url, String method) {
 
         if (method == null) {
             return Ion.with(this.context)
                     .load(url)
+                    .setLogging("azesfdg",Log.DEBUG)
                     .setBodyParameter("api_key", API_KEY)
                     .setBodyParameter("language", LANGUAGE);
         } else {
