@@ -2,7 +2,6 @@
 <android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -14,7 +13,7 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="176dp"
         android:layout_marginBottom="32dp"
-        android:text="Films"
+        android:text="Recherche de films"
         android:textSize="24sp"
         app:layout_constraintBottom_toTopOf="@+id/keyword"
         app:layout_constraintEnd_toEndOf="parent"
@@ -36,6 +35,20 @@
         app:layout_constraintTop_toBottomOf="@+id/textViewTitle" />
 
     <EditText
+        android:id="@+id/keywordStudio"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="25dp"
+        android:layout_marginEnd="8dp"
+        android:ems="10"
+        android:hint="Studio"
+        android:inputType="textPersonName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/keyword" />
+
+    <EditText
         android:id="@+id/releaseYear"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -47,7 +60,7 @@
         android:inputType="numberSigned"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/keyword" />
+        app:layout_constraintTop_toBottomOf="@+id/keywordStudio" />
 
     <Spinner
         android:id="@+id/genre"
@@ -59,7 +72,7 @@
         app:layout_constraintTop_toBottomOf="@+id/releaseYear" />
 
     <SeekBar
-        android:id="@+id/resultNumber"
+        android:id="@+id/resultNumberMax"
         style="@style/Widget.AppCompat.SeekBar.Discrete"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -82,6 +95,16 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/resultNumber" />
+        app:layout_constraintTop_toBottomOf="@+id/resultNumberMax" />
+
+    <TextView
+        android:id="@+id/textViewSeekBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="0"
+        app:layout_constraintBottom_toBottomOf="@+id/resultNumberMax"
+        app:layout_constraintStart_toEndOf="@+id/resultNumberMax"
+        app:layout_constraintTop_toTopOf="@+id/resultNumberMax" />
 
 </android.support.constraint.ConstraintLayout>

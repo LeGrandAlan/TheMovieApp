@@ -11,11 +11,13 @@ public class MovieViewHolder extends RecyclerView.ViewHolder {
     public final ImageView image;
     public final TextView title;
     public final TextView description;
+    public final TextView director;
 
     public MovieViewHolder(View itemView) {
         super(itemView);
         image = itemView.findViewById(R.id.movieImage);
         title = itemView.findViewById(R.id.movieTitle);
         description = itemView.findViewById(R.id.movieDescription);
+        director = itemView.findViewById(R.id.movieDirector);
     }
 }

@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity
         TextView userDisplayName = findViewById(R.id.userDisplayName);
         TextView userEmail = findViewById(R.id.userEmail);
 
-        if(connected) {
+        if (connected) {
             userDisplayName.setText(user.getDisplayName());
             userEmail.setText(user.getEmail());
 

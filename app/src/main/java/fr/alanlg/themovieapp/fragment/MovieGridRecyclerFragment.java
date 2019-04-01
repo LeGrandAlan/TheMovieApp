@@ -17,7 +17,7 @@ import android.view.ViewGroup;
 
 import java.util.LinkedList;
 
-import fr.alanlg.themovieapp.ApiCaller;
+import fr.alanlg.themovieapp.dao.ApiCaller;
 import fr.alanlg.themovieapp.MovieInfoActivity;
 import fr.alanlg.themovieapp.adapter.MovieImageAdapter;
 import fr.alanlg.themovieapp.model.Movie;
@@ -99,7 +99,7 @@ public abstract class MovieGridRecyclerFragment extends Fragment {
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             final GridLayoutManager gridLayoutManager = (GridLayoutManager) recyclerView
                     .getLayoutManager();
-            int visibleThreshold = 4;
+            int visibleThreshold = 6;
 
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {

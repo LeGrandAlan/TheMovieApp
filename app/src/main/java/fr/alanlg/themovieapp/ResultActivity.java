@@ -2,28 +2,34 @@ package fr.alanlg.themovieapp;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import com.koushikdutta.async.future.FutureCallback;
 
+import java.lang.reflect.Array;
 import java.lang.reflect.Type;
+import java.util.Arrays;
 import java.util.LinkedList;
 
 import fr.alanlg.themovieapp.adapter.MovieAdapter;
+import fr.alanlg.themovieapp.dao.ApiCaller;
+import fr.alanlg.themovieapp.fragment.FilterDialogFragment;
 import fr.alanlg.themovieapp.model.Movie;
 
 public class ResultActivity extends AppCompatActivity {
@@ -32,11 +38,14 @@ public class ResultActivity extends AppCompatActivity {
     MovieAdapter movieAdapter;
     ApiCaller apiCaller;
     String keyword;
+    String studio;
     int releaseYear;
     String genre;
-    int resultNumber;
+    int resultNumberMax;
+    int currentResultNumber = 0;
     int nextPage = 1;
     boolean loading = false;
+    boolean viewList = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,13 +57,13 @@ public class ResultActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
 
-
         Bundle bundle = getIntent().getExtras();
 
         keyword = bundle.getString("keyword");
+        studio = bundle.getString("Studio");
         releaseYear = bundle.getInt("releaseYear");
         genre = bundle.getString("genre");
-        resultNumber = bundle.getInt("resultNumber");
+        resultNumberMax = bundle.getInt("resultNumberMax") == 0 ? 100000 : bundle.getInt("resultNumberMax");
 
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
@@ -65,7 +74,7 @@ public class ResultActivity extends AppCompatActivity {
         recyclerView.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
 
 
-        movieAdapter = new MovieAdapter(getApplicationContext(), new LinkedList<Movie>());
+        movieAdapter = new MovieAdapter(getApplicationContext(), new LinkedList<Movie>(), viewList);
         movieAdapter.setHasStableIds(true);
         recyclerView.setAdapter(movieAdapter);
 
@@ -112,7 +121,7 @@ public class ResultActivity extends AppCompatActivity {
 
                 int totalItemCount = linearLayoutManager.getItemCount();
                 int lastVisibleItem = linearLayoutManager.findLastVisibleItemPosition();
-                if (!loading && totalItemCount <= (lastVisibleItem + visibleThreshold)) {
+                if (!loading && totalItemCount <= (lastVisibleItem + visibleThreshold) && resultNumberMax != currentResultNumber) {
                     loading = true;
                     recyclerViewAddData();
                 }
@@ -132,6 +141,13 @@ public class ResultActivity extends AppCompatActivity {
                             Type movieListType = new TypeToken<LinkedList<Movie>>() {
                             }.getType();
                             LinkedList<Movie> movies = new Gson().fromJson(result.get("results"), movieListType);
+
+                            if (currentResultNumber + movies.size() > resultNumberMax) {
+                                movies.subList(resultNumberMax - currentResultNumber, movies.size()).clear();
+                                currentResultNumber = resultNumberMax;
+                            } else
+                                currentResultNumber += movies.size();
+                            Log.d("sdfgh", "onCompleted: " + movies.size());
                             int previousIndex = movieAdapter.getItemCount();
                             movieAdapter.addData(movies);
                             movieAdapter.notifyItemRangeInserted(previousIndex, movieAdapter.getItemCount());
@@ -142,8 +158,18 @@ public class ResultActivity extends AppCompatActivity {
         ++nextPage;
     }
 
-    public void viewFilter(){
+    public void viewFilter() {
+        FragmentManager fm = getSupportFragmentManager();
+        FilterDialogFragment filterDialogFragment = FilterDialogFragment.newInstance(R.string.title_filter);
+        filterDialogFragment.show(fm, "fragment_edit_name");
+    }
 
+    public void changeView() {
+        viewList = !viewList;
+        supportInvalidateOptionsMenu();
+        recyclerView.setLayoutManager(viewList ? new LinearLayoutManager(this) : new GridLayoutManager(getApplicationContext(), 2));
+        movieAdapter.changeViewType(viewList);
+        recyclerView.setAdapter(movieAdapter);
     }
 
     @Override
@@ -154,13 +180,14 @@ public class ResultActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
 
-        Log.d("tag", "onOptionsItemSelected: " + id);
+        int id = item.getItemId();
         if (id == android.R.id.home)
             this.finish();
         else if (id == R.id.action_filter)
             viewFilter();
+        else if (id == R.id.action_changeView)
+            changeView();
 
         return super.onOptionsItemSelected(item);
     }

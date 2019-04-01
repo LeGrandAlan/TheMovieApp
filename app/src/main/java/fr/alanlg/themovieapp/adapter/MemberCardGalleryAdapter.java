@@ -51,13 +51,13 @@ public class MemberCardGalleryAdapter extends PagerAdapter {
         if (members.get(position).getClass() == CastMember.class) {
             CastMember castMember = (CastMember) members.get(position);
 
-            Picasso.get().load(castMember.getProfileImagePath()).noFade().placeholder(R.drawable.image_loading).into(cardGalleryImage);
+            Picasso.get().load(castMember.getProfileImagePath()).noFade().centerCrop().fit().placeholder(R.drawable.image_loading).into(cardGalleryImage);
             cardGalleryText.setText("Nom : " + castMember.getName());
             cardGalleryText2.setText("Rôle joué : " + castMember.getCharacter());
         } else if (members.get(position).getClass() == CrewMember.class){
             CrewMember crewMember = (CrewMember) members.get(position);
 
-            Picasso.get().load(crewMember.getProfileImagePath()).noFade().placeholder(R.drawable.image_loading).into(cardGalleryImage);
+            Picasso.get().load(crewMember.getProfileImagePath()).noFade().centerCrop().fit().placeholder(R.drawable.image_loading).into(cardGalleryImage);
             cardGalleryText.setText("Nom : " + crewMember.getName());
             cardGalleryText2.setText("Poste : " + crewMember.getJob());
         }

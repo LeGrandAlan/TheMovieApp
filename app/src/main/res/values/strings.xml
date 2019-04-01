@@ -6,6 +6,7 @@
     <string name="nav_header_subtitle">Veuillez vous connecter</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_filter">Filter</string>
+    <string name="title_filter">Filtrer les films</string>
     <string name="menu_recherche">Recherche de films</string>
     <string name="menu_accueil">Accueil</string>
     <string name="menu_top_rated">Les mieux notés</string>
@@ -18,4 +19,5 @@
     <string name="menu_settings">Paramètres</string>
     <string name="menu_disconnection">Déconnection</string>
     <string name="menu_popular">Populaires</string>
+    <string name="action_changeView">Change View</string>
 </resources>

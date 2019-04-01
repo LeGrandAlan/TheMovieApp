@@ -35,7 +35,7 @@ public class MovieImageAdapter extends RecyclerView.Adapter<MovieImageAdapter.Vi
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         View view = LayoutInflater.from(viewGroup.getContext())
-                .inflate(R.layout.movie_image_grid_item, viewGroup, false);
+                .inflate(R.layout.movie_grid_item_rate, viewGroup, false);
 
         return new ViewHolder(view);
     }

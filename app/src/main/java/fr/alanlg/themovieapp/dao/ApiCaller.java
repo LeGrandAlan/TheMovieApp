@@ -1,4 +1,4 @@
-package fr.alanlg.themovieapp;
+package fr.alanlg.themovieapp.dao;
 
 import android.content.Context;
 import android.util.Log;

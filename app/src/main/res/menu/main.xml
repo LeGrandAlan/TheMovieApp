@@ -7,5 +7,11 @@
         android:icon="@android:drawable/ic_menu_sort_by_size"
         android:orderInCategory="100"
         android:title="@string/action_filter"
-        app:showAsAction="always" />
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_changeView"
+        android:icon="@android:drawable/ic_dialog_dialer"
+        android:orderInCategory="100"
+        android:title="@string/action_changeView"
+        app:showAsAction="ifRoom" />
 </menu>

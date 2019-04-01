@@ -24,7 +24,7 @@ import java.util.LinkedList;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import fr.alanlg.themovieapp.ApiCaller;
+import fr.alanlg.themovieapp.dao.ApiCaller;
 import fr.alanlg.themovieapp.MovieInfoActivity;
 import fr.alanlg.themovieapp.R;
 import fr.alanlg.themovieapp.adapter.Member;

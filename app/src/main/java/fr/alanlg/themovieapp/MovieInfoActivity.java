@@ -38,6 +38,7 @@ import java.util.Random;
 
 import fr.alanlg.themovieapp.adapter.MemberCardGalleryAdapter;
 import fr.alanlg.themovieapp.adapter.Member;
+import fr.alanlg.themovieapp.dao.ApiCaller;
 import fr.alanlg.themovieapp.listener.FabFavoriteClickListener;
 import fr.alanlg.themovieapp.listener.FabNoFavoriteClickListener;
 import fr.alanlg.themovieapp.model.CastMember;
@@ -92,14 +93,14 @@ public class MovieInfoActivity extends YouTubeBaseActivity {
         setActionBar(toolbar);
 
         Picasso.get().load(movie.getPosterLink()).placeholder(R.drawable.image_loading).into(imageView);
-        title.setText(movie.getTitle());
-        date.setText(movie.getReleaseDate());
-        description.setText(movie.getDescription());
+        title.setText(movie.getTitle() == null || movie.getTitle().equals("") ? "Pas de titre" : movie.getTitle());
+        date.setText(movie.getReleaseDate() == null || movie.getReleaseDate().equals("") ? "Pas de date" : movie.getReleaseDate());
+        description.setText(movie.getDescription() == null || movie.getDescription().equals("") ? "Pas de description" : movie.getDescription());
 
         final FloatingActionButton fabFav = findViewById(R.id.fabFavMovie);
         final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
-        if(user == null) {
+        if (user == null) {
             fabFav.setVisibility(View.INVISIBLE);
         } else { //l'utilisateur est connecté
             FirebaseFirestore firestore = FirebaseFirestore.getInstance();
@@ -125,7 +126,7 @@ public class MovieInfoActivity extends YouTubeBaseActivity {
                 public void onComplete(@NonNull Task<QuerySnapshot> task) {
 
                     //si le film est déjà dans les favoris de l'utilisateur
-                    if(movieIdList.contains(movie.getId())) {
+                    if (movieIdList.contains(movie.getId())) {
                         fabFav.setImageResource(R.drawable.ic_menu_favorite);
                         fabFav.setOnClickListener(new FabFavoriteClickListener(getApplication(), movie, favoriteMovies));
                     } else { //si le film n'est pas dans les favoris
@@ -139,13 +140,18 @@ public class MovieInfoActivity extends YouTubeBaseActivity {
         apiCaller.movieImages(movie.getId()).setCallback(new FutureCallback<JsonObject>() {
             @Override
             public void onCompleted(Exception e, JsonObject result) {
-                Type movieImageListType = new TypeToken<LinkedList<MovieImage>>() {}.getType();
+                Type movieImageListType = new TypeToken<LinkedList<MovieImage>>() {
+                }.getType();
                 LinkedList<MovieImage> movieImages = new Gson().fromJson(result.get("backdrops"), movieImageListType);
 
-                Random r = new Random();
-                int randomIndex = r.nextInt(movieImages.size() - 1);
+                if (movieImages.isEmpty()) {
+                    Picasso.get().load("un-lien").noFade().placeholder(R.drawable.image_loading).into(movieImage);
+                } else {
+                    Random r = new Random();
+                    int randomIndex = r.nextInt(movieImages.size() - 1);
 
-                Picasso.get().load(movieImages.get(randomIndex).getImagePath()).noFade().placeholder(R.drawable.image_loading).into(movieImage);
+                    Picasso.get().load(movieImages.get(randomIndex).getImagePath()).noFade().placeholder(R.drawable.image_loading).into(movieImage);
+                }
             }
         });
 
@@ -153,20 +159,21 @@ public class MovieInfoActivity extends YouTubeBaseActivity {
         apiCaller.movieCredits(movie.getId()).setCallback(new FutureCallback<JsonObject>() {
             @Override
             public void onCompleted(Exception e, JsonObject result) {
-                Type castMemberListType = new TypeToken<LinkedList<CastMember>>() {}.getType();
+                Type castMemberListType = new TypeToken<LinkedList<CastMember>>() {
+                }.getType();
                 LinkedList<Member> castMembers = new Gson().fromJson(result.get("cast"), castMemberListType);
 
                 final MemberCardGalleryAdapter memberCardGalleryAdapter = new MemberCardGalleryAdapter(castMembers, getApplicationContext());
                 actorsViewPager.setAdapter(memberCardGalleryAdapter);
                 actorsViewPager.setPadding(100, 0, 100, 0);
 
-                Type crewMemberListType = new TypeToken<LinkedList<CrewMember>>() {}.getType();
+                Type crewMemberListType = new TypeToken<LinkedList<CrewMember>>() {
+                }.getType();
                 LinkedList<Member> crewMembers = new Gson().fromJson(result.get("crew"), crewMemberListType);
 
                 final MemberCardGalleryAdapter memberCardGalleryAdapter2 = new MemberCardGalleryAdapter(crewMembers, getApplicationContext());
                 crewViewPager.setAdapter(memberCardGalleryAdapter2);
                 crewViewPager.setPadding(100, 0, 100, 0);
-
             }
         });
 
@@ -180,7 +187,8 @@ public class MovieInfoActivity extends YouTubeBaseActivity {
                 apiCaller.movieVideos(movie.getId()).setCallback(new FutureCallback<JsonObject>() {
                     @Override
                     public void onCompleted(Exception e, JsonObject result) {
-                        Type movieVideoListType = new TypeToken<LinkedList<MovieVideo>>() {}.getType();
+                        Type movieVideoListType = new TypeToken<LinkedList<MovieVideo>>() {
+                        }.getType();
                         LinkedList<MovieVideo> movieVideos = new Gson().fromJson(result.get("results"), movieVideoListType);
 
                         LinkedList<String> youtubeKeys = new LinkedList<>();
