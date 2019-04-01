@@ -8,9 +8,7 @@ import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -21,7 +19,6 @@ import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -39,14 +36,12 @@ import fr.alanlg.themovieapp.ResultActivity;
 import fr.alanlg.themovieapp.dao.ApiCaller;
 import fr.alanlg.themovieapp.model.Compagnie;
 import fr.alanlg.themovieapp.model.Genre;
-import fr.alanlg.themovieapp.model.Movie;
 
-public class SearchFragment extends Fragment {
+public class SearchTypeFragment extends Fragment {
 
     LinkedList<Genre> genres;
     LinkedList<Compagnie> compagnies;
     int selectedCompagnieId = -1;
-    EditText keyword;
     AutoCompleteTextView studio;
     EditText releaseYear;
     Spinner genre;
@@ -60,20 +55,19 @@ public class SearchFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_search, container, false);
+        return inflater.inflate(R.layout.fragment_search_type, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        keyword = view.findViewById(R.id.keyword);
         studio = view.findViewById(R.id.keywordStudio);
         releaseYear = view.findViewById(R.id.releaseYear);
         genre = view.findViewById(R.id.genre);
         resultNumberMax = view.findViewById(R.id.resultNumberMax);
         textViewSeekBar = view.findViewById(R.id.textViewSeekBar);
         search = view.findViewById(R.id.search);
-        apiCaller = new ApiCaller(getContext());
+        apiCaller = new ApiCaller(Objects.requireNonNull(getContext()));
 
         adapterGenre = new ArrayAdapter<>(Objects.requireNonNull(getContext()), android.R.layout.simple_spinner_item, new LinkedList<String>());
         genre.setAdapter(adapterGenre);
@@ -174,7 +168,6 @@ public class SearchFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(view.getContext(), ResultActivity.class);
-                intent.putExtra("keyword", keyword.getText().toString());
                 intent.putExtra("studio", selectedCompagnieId == -1 ? "" : String.valueOf(selectedCompagnieId));
                 if (releaseYear.getText().toString().isEmpty()) {
                     intent.putExtra("releaseYear", 0);

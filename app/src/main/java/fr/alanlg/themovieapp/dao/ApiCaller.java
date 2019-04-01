@@ -1,6 +1,7 @@
 package fr.alanlg.themovieapp.dao;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.google.gson.JsonObject;
@@ -12,7 +13,7 @@ public class ApiCaller {
 
     private final String API_KEY = "0162ba21af88b681e0a203ead28348ec";
     private final String LANGUAGE = "fr-FR";
-    private final String ADULT = "true";
+    private String ADULT;
     private final String BASE_URL = "https://api.themoviedb.org/";
     private final String API_VERSION = "3";
 
@@ -20,16 +21,17 @@ public class ApiCaller {
 
     public ApiCaller(Context context) {
         this.context = context;
+        SharedPreferences mPrefs = context.getSharedPreferences("prefs", 0);
+        ADULT = mPrefs.getString("adultMovies", "false");
     }
 
-    public ResponseFuture<JsonObject> searchMovie(String keyword, int pageNumber, int year, String compagnie, String genre) {
+    public ResponseFuture<JsonObject> searchMovie(int pageNumber, int year, String compagnie, String genre) {
 
         String yearString = (year == 0) ? "" : String.valueOf(year);
 
         String url = BASE_URL + API_VERSION + "/discover/movie";
 
-        return this.getBaseRequest(url, null)
-                .setBodyParameter("api_key", API_KEY)
+        return this.getBaseRequest(url, "GET")
                 .setBodyParameter("language", LANGUAGE)
                 .setBodyParameter("include_adult", ADULT)
                 .setBodyParameter("page", String.valueOf(pageNumber))
@@ -39,12 +41,24 @@ public class ApiCaller {
                 .asJsonObject();
     }
 
+    public ResponseFuture<JsonObject> searchMovieByKeyword(String keyword, int pageNumber) {
+
+        String url = BASE_URL + API_VERSION + "/search/movie";
+
+        Log.d("keyword", "searchMovieByKeyword: " + keyword);
+        return this.getBaseRequest(url, "GET")
+                .setBodyParameter("language", LANGUAGE)
+                .setBodyParameter("include_adult", ADULT)
+                .setBodyParameter("page", String.valueOf(pageNumber))
+                .setBodyParameter("query", keyword)
+                .asJsonObject();
+    }
+
     public ResponseFuture<JsonObject> searchCompagnie(String keyword) {
 
         String url = BASE_URL + API_VERSION + "/search/company";
 
         return this.getBaseRequest(url, "GET")
-                .setBodyParameter("api_key", API_KEY)
                 .setBodyParameter("query", keyword)
                 .asJsonObject();
     }
@@ -146,7 +160,6 @@ public class ApiCaller {
         if (method == null) {
             return Ion.with(this.context)
                     .load(url)
-                    .setLogging("azesfdg",Log.DEBUG)
                     .setBodyParameter("api_key", API_KEY)
                     .setBodyParameter("language", LANGUAGE);
         } else {

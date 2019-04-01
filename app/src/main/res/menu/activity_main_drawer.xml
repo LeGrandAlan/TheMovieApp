@@ -10,9 +10,13 @@
             android:title="@string/menu_accueil"
             />
         <item
-            android:id="@+id/nav_search"
+            android:id="@+id/nav_search_type"
             android:icon="@drawable/ic_menu_movie"
-            android:title="@string/menu_recherche" />
+            android:title="@string/menu_recherche_type" />
+        <item
+            android:id="@+id/nav_search_name"
+            android:icon="@drawable/ic_menu_movie"
+            android:title="@string/menu_recherche_nom" />
         <item
             android:id="@+id/nav_popular"
             android:icon="@drawable/ic_menu_popular"

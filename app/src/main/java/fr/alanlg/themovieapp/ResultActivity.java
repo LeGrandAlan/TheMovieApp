@@ -99,7 +99,6 @@ public class ResultActivity extends AppCompatActivity {
                     startActivity(intent);
                 }
                 return false;
-
             }
 
             @Override
@@ -134,31 +133,60 @@ public class ResultActivity extends AppCompatActivity {
 
 
     public void recyclerViewAddData() {
-        Log.d("sdfghjk", "recyclerViewAddData: " + keyword + ", " + nextPage + ", " + releaseYear + ", " + studio + ", " + genre);
-        apiCaller.searchMovie(keyword, nextPage, releaseYear, studio, genre)
-                .setCallback(new FutureCallback<JsonObject>() {
-                    @Override
-                    public void onCompleted(Exception e, JsonObject result) {
-                        if (e == null) {
-                            Type movieListType = new TypeToken<LinkedList<Movie>>() {
-                            }.getType();
-                            LinkedList<Movie> movies = new Gson().fromJson(result.get("results"), movieListType);
-                            if (result.get("total_results").getAsInt() == 0) {
-                                Toast.makeText(ResultActivity.this, "Il n'y a pas de resultats", Toast.LENGTH_SHORT).show();
-                                return;
+        if (keyword != null) {
+            apiCaller.searchMovieByKeyword(keyword, nextPage)
+                    .setCallback(new FutureCallback<JsonObject>() {
+                        @Override
+                        public void onCompleted(Exception e, JsonObject result) {
+                            if (e == null) {
+                                Type movieListType = new TypeToken<LinkedList<Movie>>() {
+                                }.getType();
+                                LinkedList<Movie> movies = new Gson().fromJson(result.get("results"), movieListType);
+                                Log.d("keyword", "recyclerViewAddData: " + movies);
+
+                                if (result.get("total_results").getAsInt() == 0) {
+                                    Toast.makeText(ResultActivity.this, "Il n'y a pas de résultats", Toast.LENGTH_SHORT).show();
+                                    return;
+                                }
+                                if (currentResultNumber + movies.size() > resultNumberMax) {
+                                    movies.subList(resultNumberMax - currentResultNumber, movies.size()).clear();
+                                    currentResultNumber = resultNumberMax;
+                                } else
+                                    currentResultNumber += movies.size();
+                                int previousIndex = movieAdapter.getItemCount();
+                                movieAdapter.addData(movies);
+                                movieAdapter.notifyItemRangeInserted(previousIndex, movieAdapter.getItemCount());
+                                loading = false;
                             }
-                            if (currentResultNumber + movies.size() > resultNumberMax) {
-                                movies.subList(resultNumberMax - currentResultNumber, movies.size()).clear();
-                                currentResultNumber = resultNumberMax;
-                            } else
-                                currentResultNumber += movies.size();
-                            int previousIndex = movieAdapter.getItemCount();
-                            movieAdapter.addData(movies);
-                            movieAdapter.notifyItemRangeInserted(previousIndex, movieAdapter.getItemCount());
-                            loading = false;
                         }
-                    }
-                });
+                    });
+
+        } else {
+            apiCaller.searchMovie(nextPage, releaseYear, studio, genre)
+                    .setCallback(new FutureCallback<JsonObject>() {
+                        @Override
+                        public void onCompleted(Exception e, JsonObject result) {
+                            if (e == null) {
+                                Type movieListType = new TypeToken<LinkedList<Movie>>() {
+                                }.getType();
+                                LinkedList<Movie> movies = new Gson().fromJson(result.get("results"), movieListType);
+                                if (result.get("total_results").getAsInt() == 0) {
+                                    Toast.makeText(ResultActivity.this, "Il n'y a pas de résultats", Toast.LENGTH_SHORT).show();
+                                    return;
+                                }
+                                if (currentResultNumber + movies.size() > resultNumberMax) {
+                                    movies.subList(resultNumberMax - currentResultNumber, movies.size()).clear();
+                                    currentResultNumber = resultNumberMax;
+                                } else
+                                    currentResultNumber += movies.size();
+                                int previousIndex = movieAdapter.getItemCount();
+                                movieAdapter.addData(movies);
+                                movieAdapter.notifyItemRangeInserted(previousIndex, movieAdapter.getItemCount());
+                                loading = false;
+                            }
+                        }
+                    });
+        }
         ++nextPage;
     }
 
@@ -174,6 +202,11 @@ public class ResultActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(viewList ? new LinearLayoutManager(this) : new GridLayoutManager(getApplicationContext(), 2));
         movieAdapter.changeViewType(viewList);
         recyclerView.setAdapter(movieAdapter);
+    }
+
+    @Override
+    public void onBackPressed() {
+        this.finish();
     }
 
     @Override

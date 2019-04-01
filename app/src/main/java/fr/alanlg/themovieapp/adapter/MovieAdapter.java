@@ -46,14 +46,14 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieViewHolder> {
         final Movie movie = movies.get(position);
 
         if (list) {
-            Picasso.get().load(movie.getPosterLink()).placeholder(R.drawable.image_loading).fit().into(itemViewHolder.image);
+            Picasso.get().load(movie.getPosterLink()).placeholder(R.drawable.image_loading).resize(400, 600).into(itemViewHolder.image);
             itemViewHolder.title.setText(movie.getTitle() == null || movie.getTitle().equals("") ? "Pas de titre" : movie.getTitle());
             itemViewHolder.description.setText(movie.getDescription() == null || movie.getDescription().equals("") ? "Pas de description" : movie.getDescription());
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 itemViewHolder.description.setJustificationMode(Layout.JUSTIFICATION_MODE_INTER_WORD);
             }
         } else {
-            Picasso.get().load(movie.getPosterLink()).placeholder(R.drawable.image_loading).into(itemViewHolder.image);
+            Picasso.get().load(movie.getPosterLink()).placeholder(R.drawable.image_loading).resize(400, 600).into(itemViewHolder.image);
             itemViewHolder.title.setText(movie.getTitle() == null || movie.getTitle().equals("") ? "Pas de titre" : movie.getTitle());
             itemViewHolder.director.setText("Le réalisateur");
         }
