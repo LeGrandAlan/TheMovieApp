@@ -4,7 +4,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/backgroundDark">
 
     <TextView
         android:id="@+id/textViewTitle"
@@ -14,6 +15,7 @@
         android:layout_marginTop="28dp"
         android:layout_marginEnd="176dp"
         android:text="Dévelopeurs de l'application"
+        android:textColor="@android:color/white"
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -25,7 +27,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="24dp"
         android:layout_marginEnd="8dp"
         app:cardElevation="10dp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -35,7 +37,8 @@
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:background="#EEE">
 
             <ImageView
                 android:id="@+id/imageViewAlan"
@@ -54,7 +57,7 @@
                 android:layout_marginTop="4dp"
                 android:layout_marginEnd="8dp"
                 android:text="Alan Le Grand"
-                android:textSize="30sp"
+                android:textSize="20sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.072"
@@ -63,15 +66,13 @@
 
             <TextView
                 android:id="@+id/textViewInfoAlan"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="28dp"
+                android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
                 android:text="Étudiant en 2ème année d'informatique"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.226"
-                app:layout_constraintStart_toEndOf="@+id/imageViewAlan"
+                app:layout_constraintStart_toStartOf="@+id/textViewAlan"
                 app:layout_constraintTop_toBottomOf="@+id/textViewAlan" />
         </android.support.constraint.ConstraintLayout>
 
@@ -95,7 +96,8 @@
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:background="#EEE" >
 
             <ImageView
                 android:id="@+id/imageViewEtienne"
@@ -114,7 +116,7 @@
                 android:layout_marginTop="4dp"
                 android:layout_marginEnd="8dp"
                 android:text="Étienne Lécrivain"
-                android:textSize="30sp"
+                android:textSize="20sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.072"
@@ -123,15 +125,14 @@
 
             <TextView
                 android:id="@+id/textViewInfoEtienne"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="28dp"
+                android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
                 android:text="Étudiant en 2ème année d'informatique"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.226"
-                app:layout_constraintStart_toEndOf="@+id/imageViewEtienne"
+                app:layout_constraintStart_toStartOf="@+id/textViewEtienne"
                 app:layout_constraintTop_toBottomOf="@+id/textViewEtienne" />
         </android.support.constraint.ConstraintLayout>
 
