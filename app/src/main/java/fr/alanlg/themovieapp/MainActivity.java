@@ -43,6 +43,8 @@ import fr.alanlg.themovieapp.fragment.TopRatedFragment;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    final int NO_CONNECTED_CODE = 2;
+
     private static final int RC_SIGN_IN = 1;
     private Toolbar toolbar;
     private boolean started = false;
@@ -69,8 +71,8 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         if (!Utils.haveNetworkConnection(this)) {
-            Intent test = new Intent(MainActivity.this, NoInternetActivity.class);
-            startActivity(test);
+            Intent notConnected = new Intent(MainActivity.this, NoInternetActivity.class);
+            startActivityForResult(notConnected, NO_CONNECTED_CODE);
             return;
         }
 
@@ -82,8 +84,6 @@ public class MainActivity extends AppCompatActivity
         super.onResume();
         if (!this.started){
             this.started = true;
-        } else {
-            onCreate(new Bundle());
         }
     }
 
@@ -149,6 +149,8 @@ public class MainActivity extends AppCompatActivity
                     Log.d("Erreur connection : ", Objects.requireNonNull(response.getError()).getMessage());
                 }
             }
+        } else if (requestCode == NO_CONNECTED_CODE) {
+            onCreate(new Bundle());
         }
     }
 
