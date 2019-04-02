@@ -44,7 +44,6 @@ public class ApiCaller {
 
         String url = BASE_URL + API_VERSION + "/search/movie";
 
-        Log.d("keyword", "searchMovieByKeyword: " + keyword);
         return this.getBaseRequest(url, null)
                 .setBodyParameter("include_adult", ADULT)
                 .setBodyParameter("page", String.valueOf(pageNumber))
@@ -56,11 +55,13 @@ public class ApiCaller {
 
         String url = BASE_URL + API_VERSION + "/search/company";
 
-        return this.getBaseRequest(url, "GET")
+        return Ion.with(this.context)
+                .load("get",url)
+                .setBodyParameter("api_key",API_KEY)
                 .setBodyParameter("query", keyword)
                 .asJsonObject();
-    }
 
+    }
 
     public ResponseFuture<JsonObject> movieDetails(int movieId) {
 
@@ -154,7 +155,7 @@ public class ApiCaller {
 
 
     private Builders.Any.U getBaseRequest(String url, String method) {
-
+        Ion.getDefault(context).dump();
         if (method == null) {
             return Ion.with(this.context)
                     .load(url)

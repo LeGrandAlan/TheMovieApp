@@ -134,7 +134,6 @@ public class ResultActivity extends AppCompatActivity {
         recyclerViewAddData();
     }
 
-
     public void recyclerViewAddData() {
         if (keyword != null) {
             apiCaller.searchMovieByKeyword(keyword, nextPage)
@@ -162,7 +161,6 @@ public class ResultActivity extends AppCompatActivity {
                             }
                         }
                     });
-
         } else {
             apiCaller.searchMovie(nextPage, releaseYear, studio, genre)
                     .setCallback(new FutureCallback<JsonObject>() {
@@ -228,8 +226,6 @@ public class ResultActivity extends AppCompatActivity {
         int id = item.getItemId();
         if (id == android.R.id.home)
             this.finish();
-        else if (id == R.id.action_filter)
-            viewFilter();
         else if (id == R.id.action_changeView)
             changeView();
 

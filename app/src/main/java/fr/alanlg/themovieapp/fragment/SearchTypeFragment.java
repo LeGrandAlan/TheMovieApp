@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -107,18 +108,21 @@ public class SearchTypeFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (studio.getText().length() >= 3) {
-                    Log.d("dsffddsdfsfd", "afterTextChanged: " + s.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (studio.getText().toString().length() >= 2) {
                     apiCaller.searchCompagnie(studio.getText().toString()).setCallback(new FutureCallback<JsonObject>() {
                         @Override
                         public void onCompleted(Exception e, JsonObject result) {
                             if (e == null) {
                                 Type compagnieType = new TypeToken<LinkedList<Compagnie>>() {
                                 }.getType();
-                                Log.d("resulat", "onCompleted: "+result);
+
                                 compagnies = new Gson().fromJson(result.get("results"), compagnieType);
 
-                                if(compagnies == null || compagnies.size()==0){
+                                if (compagnies == null || compagnies.size() == 0) {
                                     return;
                                 }
                                 final List<String> list = new LinkedList<>();
@@ -132,17 +136,14 @@ public class SearchTypeFragment extends Fragment {
                                 adapterAutoComplete.clear();
                                 adapterAutoComplete.addAll(list);
                                 adapterAutoComplete.notifyDataSetChanged();
+                                studio.showDropDown();
                             }
                         }
                     });
                 }
             }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
         });
+
 
         studio.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
