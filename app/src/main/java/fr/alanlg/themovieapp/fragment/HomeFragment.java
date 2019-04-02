@@ -66,35 +66,7 @@ public class HomeFragment extends Fragment {
                 final MovieCardGalleryAdapter memberCardGalleryAdapter = new MovieCardGalleryAdapter(movies, getContext());
                 nowPlayingViewPager.setAdapter(memberCardGalleryAdapter);
 
-                nowPlayingViewPager.setOnTouchListener(new View.OnTouchListener() {
-                    private float pointX;
-                    private float pointY;
-                    private int tolerance = 50;
-                    @Override
-                    public boolean onTouch(View v, MotionEvent event) {
-                        switch(event.getAction()){
-                            case MotionEvent.ACTION_MOVE:
-                                return false; //This is important, if you return TRUE the action of swipe will not take place.
-                            case MotionEvent.ACTION_DOWN:
-                                pointX = event.getX();
-                                pointY = event.getY();
-                                break;
-                            case MotionEvent.ACTION_UP:
-                                boolean sameX = pointX + tolerance > event.getX() && pointX - tolerance < event.getX();
-                                boolean sameY = pointY + tolerance > event.getY() && pointY - tolerance < event.getY();
-                                if(sameX && sameY){
-                                    //The user "clicked" certain point in the screen or just returned to the same position an raised the finger
-                                    int itemPosition = ((ViewPager)v).getCurrentItem();
-                                    Movie movie = ((MovieCardGalleryAdapter)nowPlayingViewPager.getAdapter()).getItemAtPosition(itemPosition);
-
-                                    Intent intent = new Intent(getContext(), MovieInfoActivity.class);
-                                    intent.putExtra("movie", movie);
-                                    startActivity(intent);
-                                }
-                        }
-                        return false;
-                    }
-                });
+                nowPlayingViewPager.setOnTouchListener(MovieCardGalleryAdapter.getOnTouchListener(getContext(), nowPlayingViewPager));
 
                 nowPlayingViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
                     @Override

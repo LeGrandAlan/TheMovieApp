@@ -39,6 +39,7 @@ import java.util.Random;
 
 import fr.alanlg.themovieapp.adapter.MemberCardGalleryAdapter;
 import fr.alanlg.themovieapp.adapter.Member;
+import fr.alanlg.themovieapp.adapter.MovieCardGalleryAdapter;
 import fr.alanlg.themovieapp.dao.ApiCaller;
 import fr.alanlg.themovieapp.listener.FabFavoriteClickListener;
 import fr.alanlg.themovieapp.listener.FabNoFavoriteClickListener;
@@ -223,6 +224,21 @@ public class MovieInfoActivity extends YouTubeBaseActivity {
             public boolean onTouch(View v, MotionEvent event) {
                 youTubePlayerView.initialize(YoutubeConfig.getApiKey(), onInitializedListener);
                 return false;
+            }
+        });
+
+        //proposition de films similaires
+        apiCaller.similarMovie(movie.getId()).setCallback(new FutureCallback<JsonObject>() {
+            @Override
+            public void onCompleted(Exception e, JsonObject result) {
+                Type movieListType = new TypeToken<LinkedList<Movie>>() {}.getType();
+                LinkedList<Movie> movies = new Gson().fromJson(result.get("results"), movieListType);
+
+                ViewPager similarMoviesViewPager = findViewById(R.id.similarMoviesViewPager);
+                final MovieCardGalleryAdapter movieCardGalleryAdapter = new MovieCardGalleryAdapter(movies, getApplicationContext());
+                similarMoviesViewPager.setAdapter(movieCardGalleryAdapter);
+
+                similarMoviesViewPager.setOnTouchListener(MovieCardGalleryAdapter.getOnTouchListener(getApplicationContext(), similarMoviesViewPager));
             }
         });
 
