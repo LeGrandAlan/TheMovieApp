@@ -49,11 +49,21 @@ public class ResultActivity extends AppCompatActivity {
     int nextPage = 1;
     boolean loading = false;
     SharedPreferences mPrefs;
+    private boolean started;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_result);
+
+        if (!started) {
+            super.onCreate(savedInstanceState);
+            setContentView(R.layout.activity_result);
+        }
+
+        if (!Utils.haveNetworkConnection(this)) {
+            Intent test = new Intent(ResultActivity.this, NoInternetActivity.class);
+            startActivity(test);
+            return;
+        }
 
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -134,6 +144,16 @@ public class ResultActivity extends AppCompatActivity {
         recyclerViewAddData();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (!this.started){
+            this.started = true;
+        } else {
+            onCreate(new Bundle());
+        }
+    }
+
     public void recyclerViewAddData() {
         if (keyword != null) {
             apiCaller.searchMovieByKeyword(keyword, nextPage)
@@ -161,6 +181,7 @@ public class ResultActivity extends AppCompatActivity {
                             }
                         }
                     });
+
         } else {
             apiCaller.searchMovie(nextPage, releaseYear, studio, genre)
                     .setCallback(new FutureCallback<JsonObject>() {

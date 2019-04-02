@@ -2,6 +2,7 @@ package fr.alanlg.themovieapp;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -59,13 +60,22 @@ public class MovieInfoActivity extends YouTubeBaseActivity {
     Dialog dialog;
     ViewPager actorsViewPager;
     ViewPager crewViewPager;
+    private boolean started = false;
 
     @SuppressLint({"RestrictedApi", "ClickableViewAccessibility"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_movie_info);
+        if (!started) {
+            super.onCreate(savedInstanceState);
+            setContentView(R.layout.activity_movie_info);
+        }
+
+        if (!Utils.haveNetworkConnection(this)) {
+            Intent test = new Intent(MovieInfoActivity.this, NoInternetActivity.class);
+            startActivity(test);
+            return;
+        }
 
         imageView = findViewById(R.id.imageViewMoviePoster);
         title = findViewById(R.id.textViewTitleInfo);
@@ -216,6 +226,16 @@ public class MovieInfoActivity extends YouTubeBaseActivity {
             }
         });
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (!this.started){
+            this.started = true;
+        } else {
+            onCreate(new Bundle());
+        }
     }
 
     @Override

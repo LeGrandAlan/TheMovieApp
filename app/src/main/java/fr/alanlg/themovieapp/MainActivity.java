@@ -1,6 +1,9 @@
 package fr.alanlg.themovieapp;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -42,11 +45,16 @@ public class MainActivity extends AppCompatActivity
 
     private static final int RC_SIGN_IN = 1;
     private Toolbar toolbar;
+    private boolean started = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+
+        if(!started) {
+            super.onCreate(savedInstanceState);
+            setContentView(R.layout.activity_main);
+        }
+
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -60,7 +68,23 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        if (!Utils.haveNetworkConnection(this)) {
+            Intent test = new Intent(MainActivity.this, NoInternetActivity.class);
+            startActivity(test);
+            return;
+        }
+
         loadFragment(new HomeFragment());
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (!this.started){
+            this.started = true;
+        } else {
+            onCreate(new Bundle());
+        }
     }
 
     private void refreshUserDisplay(FirebaseUser user, boolean connected) {
@@ -146,6 +170,12 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         Fragment fragment = null;
+
+        if (!Utils.haveNetworkConnection(this)) {
+            Intent test = new Intent(MainActivity.this, NoInternetActivity.class);
+            startActivity(test);
+            return false;
+        }
 
         if (id == R.id.nav_home) {
             fragment = new HomeFragment();
