@@ -1,6 +1,7 @@
 package fr.alanlg.themovieapp;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
@@ -27,6 +28,7 @@ import java.lang.reflect.Array;
 import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.LinkedList;
+import java.util.Objects;
 
 import fr.alanlg.themovieapp.adapter.MovieAdapter;
 import fr.alanlg.themovieapp.dao.ApiCaller;
@@ -46,7 +48,7 @@ public class ResultActivity extends AppCompatActivity {
     int currentResultNumber = 0;
     int nextPage = 1;
     boolean loading = false;
-    boolean viewList = true;
+    SharedPreferences mPrefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +61,7 @@ public class ResultActivity extends AppCompatActivity {
         }
 
         Bundle bundle = getIntent().getExtras();
+        mPrefs = getApplicationContext().getSharedPreferences("prefs", 0);
 
         keyword = bundle.getString("keyword");
         studio = bundle.getString("studio");
@@ -67,7 +70,7 @@ public class ResultActivity extends AppCompatActivity {
         resultNumberMax = bundle.getInt("resultNumberMax") == 0 ? 100000 : bundle.getInt("resultNumberMax");
 
         recyclerView = findViewById(R.id.recyclerView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+        recyclerView.setLayoutManager(Boolean.parseBoolean(mPrefs.getString("viewList", "true")) ? new LinearLayoutManager(this) : new GridLayoutManager(getApplicationContext(), 2));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setHasFixedSize(true);
         recyclerView.setItemViewCacheSize(30);
@@ -75,7 +78,7 @@ public class ResultActivity extends AppCompatActivity {
         recyclerView.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
 
 
-        movieAdapter = new MovieAdapter(getApplicationContext(), new LinkedList<Movie>(), viewList);
+        movieAdapter = new MovieAdapter(getApplicationContext(), new LinkedList<Movie>(), Boolean.parseBoolean(mPrefs.getString("viewList", "true")));
         movieAdapter.setHasStableIds(true);
         recyclerView.setAdapter(movieAdapter);
 
@@ -138,13 +141,12 @@ public class ResultActivity extends AppCompatActivity {
                     .setCallback(new FutureCallback<JsonObject>() {
                         @Override
                         public void onCompleted(Exception e, JsonObject result) {
-                            if (e == null) {
+                            if (e == null && result != null) {
                                 Type movieListType = new TypeToken<LinkedList<Movie>>() {
                                 }.getType();
                                 LinkedList<Movie> movies = new Gson().fromJson(result.get("results"), movieListType);
-                                Log.d("keyword", "recyclerViewAddData: " + movies);
 
-                                if (result.get("total_results").getAsInt() == 0) {
+                                if (movies == null || movies.size() == 0) {
                                     Toast.makeText(ResultActivity.this, "Il n'y a pas de résultats", Toast.LENGTH_SHORT).show();
                                     return;
                                 }
@@ -166,11 +168,12 @@ public class ResultActivity extends AppCompatActivity {
                     .setCallback(new FutureCallback<JsonObject>() {
                         @Override
                         public void onCompleted(Exception e, JsonObject result) {
-                            if (e == null) {
+                            if (e == null && result != null) {
                                 Type movieListType = new TypeToken<LinkedList<Movie>>() {
                                 }.getType();
                                 LinkedList<Movie> movies = new Gson().fromJson(result.get("results"), movieListType);
-                                if (result.get("total_results").getAsInt() == 0) {
+
+                                if (movies == null || movies.size() == 0) {
                                     Toast.makeText(ResultActivity.this, "Il n'y a pas de résultats", Toast.LENGTH_SHORT).show();
                                     return;
                                 }
@@ -197,7 +200,11 @@ public class ResultActivity extends AppCompatActivity {
     }
 
     public void changeView() {
+        boolean viewList = Boolean.parseBoolean(mPrefs.getString("viewList", "true"));
         viewList = !viewList;
+        SharedPreferences.Editor mEditor = mPrefs.edit();
+        mEditor.putString("viewList", String.valueOf(viewList)).apply();
+
         supportInvalidateOptionsMenu();
         recyclerView.setLayoutManager(viewList ? new LinearLayoutManager(this) : new GridLayoutManager(getApplicationContext(), 2));
         movieAdapter.changeViewType(viewList);

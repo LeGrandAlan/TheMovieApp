@@ -31,8 +31,7 @@ public class ApiCaller {
 
         String url = BASE_URL + API_VERSION + "/discover/movie";
 
-        return this.getBaseRequest(url, "GET")
-                .setBodyParameter("language", LANGUAGE)
+        return this.getBaseRequest(url, null)
                 .setBodyParameter("include_adult", ADULT)
                 .setBodyParameter("page", String.valueOf(pageNumber))
                 .setBodyParameter("year", yearString)
@@ -46,8 +45,7 @@ public class ApiCaller {
         String url = BASE_URL + API_VERSION + "/search/movie";
 
         Log.d("keyword", "searchMovieByKeyword: " + keyword);
-        return this.getBaseRequest(url, "GET")
-                .setBodyParameter("language", LANGUAGE)
+        return this.getBaseRequest(url, null)
                 .setBodyParameter("include_adult", ADULT)
                 .setBodyParameter("page", String.valueOf(pageNumber))
                 .setBodyParameter("query", keyword)

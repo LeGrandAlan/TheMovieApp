@@ -107,10 +107,6 @@ public class SearchTypeFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
                 if (studio.getText().length() >= 3) {
                     Log.d("dsffddsdfsfd", "afterTextChanged: " + s.toString());
                     apiCaller.searchCompagnie(studio.getText().toString()).setCallback(new FutureCallback<JsonObject>() {
@@ -119,8 +115,12 @@ public class SearchTypeFragment extends Fragment {
                             if (e == null) {
                                 Type compagnieType = new TypeToken<LinkedList<Compagnie>>() {
                                 }.getType();
+                                Log.d("resulat", "onCompleted: "+result);
                                 compagnies = new Gson().fromJson(result.get("results"), compagnieType);
 
+                                if(compagnies == null || compagnies.size()==0){
+                                    return;
+                                }
                                 final List<String> list = new LinkedList<>();
                                 compagnies.forEach(new Consumer<Compagnie>() {
                                     @Override
@@ -136,6 +136,10 @@ public class SearchTypeFragment extends Fragment {
                         }
                     });
                 }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
 
             }
         });
@@ -175,7 +179,7 @@ public class SearchTypeFragment extends Fragment {
                     intent.putExtra("releaseYear", Integer.parseInt(releaseYear.getText().toString()));
                 }
                 intent.putExtra("genre", genre.getSelectedItemPosition() == 0 ? "" : String.valueOf(genres.get(genre.getSelectedItemPosition() - 1).getId()));
-                intent.putExtra("resultNumberMax", resultNumberMax.getProgress()*20);
+                intent.putExtra("resultNumberMax", resultNumberMax.getProgress() * 20);
                 startActivity(intent);
             }
         });
