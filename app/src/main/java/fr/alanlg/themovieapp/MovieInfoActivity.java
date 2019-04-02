@@ -174,17 +174,29 @@ public class MovieInfoActivity extends YouTubeBaseActivity {
                 }.getType();
                 LinkedList<Member> castMembers = new Gson().fromJson(result.get("cast"), castMemberListType);
 
-                final MemberCardGalleryAdapter memberCardGalleryAdapter = new MemberCardGalleryAdapter(castMembers, getApplicationContext());
-                actorsViewPager.setAdapter(memberCardGalleryAdapter);
-                actorsViewPager.setPadding(100, 0, 100, 0);
+                if (castMembers == null || castMembers.size() == 0) {
+                    TextView textView = findViewById(R.id.textViewActors);
+                    textView.setVisibility(View.GONE);
+                    actorsViewPager.setVisibility(View.GONE);
+                } else {
+                    final MemberCardGalleryAdapter memberCardGalleryAdapter = new MemberCardGalleryAdapter(castMembers, getApplicationContext());
+                    actorsViewPager.setAdapter(memberCardGalleryAdapter);
+                    actorsViewPager.setPadding(100, 0, 100, 0);
+                }
 
                 Type crewMemberListType = new TypeToken<LinkedList<CrewMember>>() {
                 }.getType();
                 LinkedList<Member> crewMembers = new Gson().fromJson(result.get("crew"), crewMemberListType);
 
-                final MemberCardGalleryAdapter memberCardGalleryAdapter2 = new MemberCardGalleryAdapter(crewMembers, getApplicationContext());
-                crewViewPager.setAdapter(memberCardGalleryAdapter2);
-                crewViewPager.setPadding(100, 0, 100, 0);
+                if (crewMembers == null || crewMembers.size() == 0) {
+                    TextView textView = findViewById(R.id.textViewCrew);
+                    textView.setVisibility(View.GONE);
+                    crewViewPager.setVisibility(View.GONE);
+                } else {
+                    final MemberCardGalleryAdapter memberCardGalleryAdapter2 = new MemberCardGalleryAdapter(crewMembers, getApplicationContext());
+                    crewViewPager.setAdapter(memberCardGalleryAdapter2);
+                    crewViewPager.setPadding(100, 0, 100, 0);
+                }
             }
         });
 
@@ -202,11 +214,24 @@ public class MovieInfoActivity extends YouTubeBaseActivity {
                         }.getType();
                         LinkedList<MovieVideo> movieVideos = new Gson().fromJson(result.get("results"), movieVideoListType);
 
+                        if (movieVideos == null || movieVideos.size() == 0) {
+                            TextView textView = findViewById(R.id.textView);
+                            textView.setVisibility(View.GONE);
+                            youTubePlayerView.setVisibility(View.GONE);
+                            return;
+
+                        }
                         LinkedList<String> youtubeKeys = new LinkedList<>();
 
                         for (MovieVideo movieVideo : movieVideos) {
                             if (movieVideo.getSite().equals("YouTube"))
                                 youtubeKeys.add(movieVideo.getKey());
+                        }
+                        if (youtubeKeys.size() == 0) {
+                            TextView textView = findViewById(R.id.textView);
+                            textView.setVisibility(View.GONE);
+                            youTubePlayerView.setVisibility(View.GONE);
+                            return;
                         }
                         youTubePlayer.loadVideos(youtubeKeys);
                     }
@@ -231,10 +256,17 @@ public class MovieInfoActivity extends YouTubeBaseActivity {
         apiCaller.similarMovie(movie.getId()).setCallback(new FutureCallback<JsonObject>() {
             @Override
             public void onCompleted(Exception e, JsonObject result) {
-                Type movieListType = new TypeToken<LinkedList<Movie>>() {}.getType();
+                Type movieListType = new TypeToken<LinkedList<Movie>>() {
+                }.getType();
                 LinkedList<Movie> movies = new Gson().fromJson(result.get("results"), movieListType);
 
                 ViewPager similarMoviesViewPager = findViewById(R.id.similarMoviesViewPager);
+                if (movies == null || movies.size() == 0) {
+                    TextView textView = findViewById(R.id.textView2);
+                    textView.setVisibility(View.GONE);
+                    similarMoviesViewPager.setVisibility(View.GONE);
+                    return;
+                }
                 final MovieCardGalleryAdapter movieCardGalleryAdapter = new MovieCardGalleryAdapter(movies, getApplicationContext());
                 similarMoviesViewPager.setAdapter(movieCardGalleryAdapter);
 
@@ -247,7 +279,7 @@ public class MovieInfoActivity extends YouTubeBaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if (!this.started){
+        if (!this.started) {
             this.started = true;
         } else {
             onCreate(new Bundle());

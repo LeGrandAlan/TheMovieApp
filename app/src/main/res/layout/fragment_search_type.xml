@@ -94,6 +94,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:text="0"
+        android:textColor="@android:color/white"
         app:layout_constraintBottom_toBottomOf="@+id/resultNumberMax"
         app:layout_constraintStart_toEndOf="@+id/resultNumberMax"
         app:layout_constraintTop_toTopOf="@+id/resultNumberMax" />

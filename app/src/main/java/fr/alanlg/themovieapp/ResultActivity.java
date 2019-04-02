@@ -45,8 +45,8 @@ public class ResultActivity extends AppCompatActivity {
     int releaseYear;
     String genre;
     int resultNumberMax;
-    int currentResultNumber = 0;
-    int nextPage = 1;
+    int currentResultNumber;
+    int nextPage;
     boolean loading = false;
     SharedPreferences mPrefs;
     private boolean started;
@@ -72,6 +72,9 @@ public class ResultActivity extends AppCompatActivity {
 
         Bundle bundle = getIntent().getExtras();
         mPrefs = getApplicationContext().getSharedPreferences("prefs", 0);
+
+        currentResultNumber = 0;
+        nextPage = 1;
 
         keyword = bundle.getString("keyword");
         studio = bundle.getString("studio");
@@ -147,7 +150,7 @@ public class ResultActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if (!this.started){
+        if (!this.started) {
             this.started = true;
         } else {
             onCreate(new Bundle());
@@ -166,7 +169,8 @@ public class ResultActivity extends AppCompatActivity {
                                 LinkedList<Movie> movies = new Gson().fromJson(result.get("results"), movieListType);
 
                                 if (movies == null || movies.size() == 0) {
-                                    Toast.makeText(ResultActivity.this, "Il n'y a pas de résultats", Toast.LENGTH_SHORT).show();
+                                    if (result.get("page") != null && result.get("page").getAsInt() == 1)
+                                        Toast.makeText(ResultActivity.this, "Il n'y a pas de résultats", Toast.LENGTH_SHORT).show();
                                     return;
                                 }
                                 if (currentResultNumber + movies.size() > resultNumberMax) {
@@ -181,7 +185,6 @@ public class ResultActivity extends AppCompatActivity {
                             }
                         }
                     });
-
         } else {
             apiCaller.searchMovie(nextPage, releaseYear, studio, genre)
                     .setCallback(new FutureCallback<JsonObject>() {
@@ -193,7 +196,8 @@ public class ResultActivity extends AppCompatActivity {
                                 LinkedList<Movie> movies = new Gson().fromJson(result.get("results"), movieListType);
 
                                 if (movies == null || movies.size() == 0) {
-                                    Toast.makeText(ResultActivity.this, "Il n'y a pas de résultats", Toast.LENGTH_SHORT).show();
+                                    if (result.get("page") != null && result.get("page").getAsInt() == 1)
+                                        Toast.makeText(ResultActivity.this, "Il n'y a pas de résultats", Toast.LENGTH_SHORT).show();
                                     return;
                                 }
                                 if (currentResultNumber + movies.size() > resultNumberMax) {

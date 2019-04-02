@@ -18,6 +18,6 @@ public class MovieViewHolder extends RecyclerView.ViewHolder {
         image = itemView.findViewById(R.id.movieImage);
         title = itemView.findViewById(R.id.movieTitle);
         description = itemView.findViewById(R.id.movieDescription);
-        director = itemView.findViewById(R.id.movieDirector);
+        director = itemView.findViewById(R.id.movieDate);
     }
 }

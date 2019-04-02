@@ -5,7 +5,6 @@ import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.Layout;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,7 +35,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieViewHolder> {
     @Override
     public MovieViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
         View view = LayoutInflater.from(viewGroup.getContext())
-                .inflate(list ? R.layout.movie_list_item : R.layout.movie_grid_item_director, viewGroup, false);
+                .inflate(list ? R.layout.movie_list_item : R.layout.movie_grid_item_date, viewGroup, false);
 
         return new MovieViewHolder(view);
     }
@@ -47,15 +46,15 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieViewHolder> {
 
         if (list) {
             Picasso.get().load(movie.getPosterLink()).placeholder(R.drawable.image_loading).resize(400, 600).into(itemViewHolder.image);
-            itemViewHolder.title.setText(movie.getTitle() == null || movie.getTitle().equals("") ? "Pas de titre" : movie.getTitle());
-            itemViewHolder.description.setText(movie.getDescription() == null || movie.getDescription().equals("") ? "Pas de description" : movie.getDescription());
+            itemViewHolder.title.setText(movie.getTitle() == null || movie.getTitle().equals("") ? "Na" : movie.getTitle());
+            itemViewHolder.description.setText(movie.getDescription() == null || movie.getDescription().equals("") ? "Na" : movie.getDescription());
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 itemViewHolder.description.setJustificationMode(Layout.JUSTIFICATION_MODE_INTER_WORD);
             }
         } else {
             Picasso.get().load(movie.getPosterLink()).placeholder(R.drawable.image_loading).resize(400, 600).into(itemViewHolder.image);
-            itemViewHolder.title.setText(movie.getTitle() == null || movie.getTitle().equals("") ? "Pas de titre" : movie.getTitle());
-            itemViewHolder.director.setText("Le réalisateur");
+            itemViewHolder.title.setText(movie.getTitle() == null || movie.getTitle().equals("") ? "Na" : movie.getTitle());
+            itemViewHolder.director.setText(movie.getReleaseDate() == null || movie.getReleaseDate().equals("") ? "Na" : movie.getReleaseDate());
         }
     }
 

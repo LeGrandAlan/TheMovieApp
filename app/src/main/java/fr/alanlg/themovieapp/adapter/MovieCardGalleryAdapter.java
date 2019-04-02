@@ -67,7 +67,7 @@ public class MovieCardGalleryAdapter extends PagerAdapter {
 
     @Override
     public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
-        container.removeView((View)object);
+        container.removeView((View) object);
     }
 
     public Movie getItemAtPosition(int i) {
@@ -79,9 +79,10 @@ public class MovieCardGalleryAdapter extends PagerAdapter {
             private float pointX;
             private float pointY;
             private int tolerance = 50;
+
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                switch(event.getAction()){
+                switch (event.getAction()) {
                     case MotionEvent.ACTION_MOVE:
                         return false; //This is important, if you return TRUE the action of swipe will not take place.
                     case MotionEvent.ACTION_DOWN:
@@ -91,13 +92,14 @@ public class MovieCardGalleryAdapter extends PagerAdapter {
                     case MotionEvent.ACTION_UP:
                         boolean sameX = pointX + tolerance > event.getX() && pointX - tolerance < event.getX();
                         boolean sameY = pointY + tolerance > event.getY() && pointY - tolerance < event.getY();
-                        if(sameX && sameY){
+                        if (sameX && sameY) {
                             //The user "clicked" certain point in the screen or just returned to the same position an raised the finger
-                            int itemPosition = ((ViewPager)v).getCurrentItem();
-                            Movie movie = ((MovieCardGalleryAdapter)viewPager.getAdapter()).getItemAtPosition(itemPosition);
+                            int itemPosition = ((ViewPager) v).getCurrentItem();
+                            Movie movie = ((MovieCardGalleryAdapter) viewPager.getAdapter()).getItemAtPosition(itemPosition);
 
                             Intent intent = new Intent(context, MovieInfoActivity.class);
                             intent.putExtra("movie", movie);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             context.startActivity(intent);
                         }
                 }
